@@ -1,0 +1,483 @@
+/* Reset and Body Styling */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Main Quiz Container */
+.quiz-container {
+  position: relative;
+  width: 80%;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+/* Buttons */
+.control-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-left: 10px;
+}
+
+.control-button:hover {
+  background-color: #45a049;
+}
+
+/* Themed Block Styling */
+.theme-block {
+  margin-bottom: 30px;
+}
+
+.theme-title {
+  font-size: 2.5em;
+  color: #333;
+  width: 150px;
+  text-align: left;
+  margin: 0;
+}
+
+.question-grid {
+  display: grid;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Quiz Box */
+.quiz-box {
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2em;
+  min-width: 250px;
+  min-height: 200px;
+}
+
+.quiz-box:hover {
+  transform: scale(1.05);
+}
+
+.quiz-box.revealed {
+  background-color: #2196f3;
+}
+
+.quiz-box.clicked {
+  background-color: red;
+  color: white;
+}
+
+/* Points Display in Quiz Box */
+.question-points {
+  font-size: 0.8em;
+  color: #ffffffa0;
+  margin-top: 5px;
+}
+
+/* Separator */
+.separator {
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80vw;
+  height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.8em;
+}
+
+/* Modal Timer */
+.modal-timer {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff5c5c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2em;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #ff1a1a;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90vw;
+    height: 90vh;
+    padding: 15px;
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95vw;
+    height: 95vh;
+    padding: 10px;
+    font-size: 1.3em;
+  }
+}
+
+/* Opening Page */
+.opening-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.menu-button,
+.save-button {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  margin: 5px;
+}
+
+.save-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.save-list li {
+  margin: 5px;
+}
+
+.team-setup {
+  margin-top: 20px;
+}
+
+.team-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.team-list li {
+  margin: 5px;
+  font-weight: bold;
+}
+
+.team-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0;
+}
+
+.team-delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.team-delete-button:hover {
+  background-color: darkred;
+}
+
+.save-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0;
+}
+
+.menu-button,
+.team-buttons button {
+  padding: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.save-button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+
+.team-buttons button {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  margin: 5px;
+}
+
+.leaderboard-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 10px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.leaderboard {
+  position: fixed;
+  top: 50px;
+  left: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.leaderboard h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+}
+
+.leaderboard ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.leaderboard li {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.questions-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.quizgame-container {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80vw;
+  height: 80vh;
+}
+
+.theme-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.questions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.quiz-box.locked {
+  opacity: 0.7;
+  position: relative;
+}
+
+.locked-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 0.9em;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Exit Button */
+.exit-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.exit-button:hover {
+  background-color: darkred;
+}
+
+/* Login Page Styling */
+.login-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.login-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.login-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+select {
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Responsive Login Page Styling */
+@media (max-width: 600px) {
+  .login-page {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .login-button {
+    font-size: 0.9em;
+    padding: 8px 16px;
+  }
+
+  select {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+}
+
+.login-warning {
+  text-align: center;
+  margin-top: 20px;
+  color: red;
+  font-weight: bold;
+}
