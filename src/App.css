@@ -505,3 +505,21 @@ select {
   padding: 5px 10px;
   font-size: 1em;
 }
+
+/* Big Green Button */
+.big-green-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 20px 40px;
+  font-size: 1.5em;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: transform 0.2s;
+}
+
+.big-green-button:hover {
+  background-color: #45a049;
+  transform: scale(1.1);
+}

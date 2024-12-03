@@ -1,4 +1,3 @@
-// src/HandsUp.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -8,8 +7,10 @@ function HandsUp({ isGameStarted }) {
     const { teamName } = useParams();
     const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const [isQuestionActive, setIsQuestionActive] = useState(false);
 
     useEffect(() => {
+        // Verify the team's access to the HandsUp page
         const verifyAccess = async () => {
             const token = sessionStorage.getItem('teamToken');
 
@@ -24,7 +25,7 @@ function HandsUp({ isGameStarted }) {
                     setIsAuthorized(false);
                 }
             } catch (error) {
-                console.error('Access verification failed:', error.response?.data?.message || error.message);
+                console.error('Access verification failed:', error.message);
                 setIsAuthorized(false);
             }
         };
@@ -36,17 +37,28 @@ function HandsUp({ isGameStarted }) {
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
-            // If this team was kicked, redirect to login
-            if (data.kickedTeam && data.kickedTeam === teamName) {
-                sessionStorage.removeItem('teamToken');
-                navigate('/login');
+            if (data.type === 'update' && data.loggedInTeams) {
+
+                // If this team was kicked, redirect to login
+                if (data.kickedTeam && data.kickedTeam === teamName) {
+                    sessionStorage.removeItem('teamToken');
+                    navigate('/login');
+                }
+
+                // If all teams were kicked, redirect all to login
+                if (data.type === 'update' && data.loggedInTeams.length === 0) {
+                    sessionStorage.removeItem('teamToken');
+                    navigate('/login');
+                }
             }
 
-            // If all teams were kicked, redirect all to login
-            if (data.type === 'update' && data.loggedInTeams.length === 0) {
-                sessionStorage.removeItem('teamToken');
-                navigate('/login');
+            if (data.type === 'update' && data.gameState) {
+
+            // Update the question active state
+            if (data.type === 'update' && data.gameState) {
+                setIsQuestionActive(data.gameState.isQuestionActive || false);
             }
+          }
         };
 
         socket.onclose = () => console.log('WebSocket disconnected');
@@ -65,7 +77,7 @@ function HandsUp({ isGameStarted }) {
     }
 
     if (isAuthorized === null) {
-        return <div>Loading...</div>; // Show a loading state while verifying access
+        return <div>Loading...</div>;
     }
 
     if (!isAuthorized) {
@@ -83,6 +95,17 @@ function HandsUp({ isGameStarted }) {
         <div className="handsup-container">
             <h1>Hands Up: {teamName}</h1>
             <p>Prepare to answer the questions!</p>
+            <button
+                className="big-green-button"
+                disabled={!isQuestionActive}
+                style={{
+                    backgroundColor: isQuestionActive ? '#4caf50' : '#f44336',
+                    cursor: isQuestionActive ? 'pointer' : 'not-allowed',
+                }}
+                onClick={() => console.log(`${teamName} pressed the button`)}
+            >
+                Big Green Button
+            </button>
         </div>
     );
 }

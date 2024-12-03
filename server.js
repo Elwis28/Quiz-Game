@@ -7,12 +7,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let teamTokens = {}; // In-memory storage for simplicity
+let teamTokens = {};
 
 let gameState = {
     isGameStarted: false,
     teams: [],
     loggedInTeams: [],
+    isQuestionActive: false,
 };
 
 // WebSocket server for real-time updates
@@ -35,6 +36,14 @@ server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, (ws) => {
         wss.emit('connection', ws, request);
     });
+});
+
+// Toggle question state
+app.post('/toggle-question', (req, res) => {
+    const { isQuestionActive } = req.body;
+    gameState.isQuestionActive = isQuestionActive;
+    broadcast({ type: 'update', gameState });
+    res.json({ success: true, isQuestionActive });
 });
 
 // Start a new game

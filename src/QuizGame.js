@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import './App.css';
+import axios from "axios";
 
 function QuizGame({
                       quizData = [],
@@ -19,7 +20,7 @@ function QuizGame({
     const [timeLeft, setTimeLeft] = useState(60);
     const [currentPicker, setCurrentPicker] = useState(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
-    const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams);
+    const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams || []);
 
     useEffect(() => {
         const savedGame = localStorage.getItem(saveFileName);
@@ -80,11 +81,17 @@ function QuizGame({
 
         setModalContent(question);
         setTimeLeft(60);
+
+        // Activate the question for all teams
+        axios.post('http://localhost:5000/toggle-question', { isQuestionActive: true });
     };
 
     const closeModal = () => {
         setModalContent(null);
         setTimeLeft(60);
+
+        // Deactivate the question for all teams
+        axios.post('http://localhost:5000/toggle-question', { isQuestionActive: false });
     };
 
     const handleTeamWin = (team) => {
@@ -214,7 +221,9 @@ function QuizGame({
                             <li
                                 key={team.name}
                                 style={{
-                                    color: loggedInTeams.includes(team.name) ? 'green' : 'red',
+                                    color: Array.isArray(loggedInTeams) && loggedInTeams.includes(team.name)
+                                        ? 'green'
+                                        : 'red',
                                 }}
                             >
                                 {team.name}
