@@ -157,15 +157,12 @@ function App() {
                                 <QuizGame
                                     quizData={gameData}
                                     teams={teams}
+                                    loggedInTeams={loggedInTeams} // Pass loggedInTeams correctly
                                     saveFileName={saveFileName}
                                     saveGameProgress={(currentTeams, answeredQuestions) => {
                                         const saveData = { teams: currentTeams, answeredQuestions };
-                                        const fileName =
-                                            saveFileName || generateSaveFileName();
-                                        localStorage.setItem(
-                                            fileName,
-                                            JSON.stringify(saveData)
-                                        );
+                                        const fileName = saveFileName || generateSaveFileName();
+                                        localStorage.setItem(fileName, JSON.stringify(saveData));
                                     }}
                                     onExit={() => {
                                         setIsGameStarted(false);

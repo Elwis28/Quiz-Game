@@ -3,14 +3,23 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import './App.css';
 
-function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit }) {
+function QuizGame({
+                      quizData = [],
+                      teams = [],
+                      saveFileName,
+                      saveGameProgress,
+                      onExit,
+                      loggedInTeams: initialLoggedInTeams = [],
+                  }) {
     const [modalContent, setModalContent] = useState(null);
     const [answeredQuestions, setAnsweredQuestions] = useState({});
     const [teamData, setTeamData] = useState([]);
     const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
+    const [isTeamListVisible, setIsTeamListVisible] = useState(false);
     const [timeLeft, setTimeLeft] = useState(60);
     const [currentPicker, setCurrentPicker] = useState(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
+    const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams); // Real-time team login state
 
     useEffect(() => {
         const savedGame = localStorage.getItem(saveFileName);
@@ -18,7 +27,11 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
             const { answeredQuestions: savedAnswers, teams: savedTeams } = JSON.parse(savedGame);
             setAnsweredQuestions(savedAnswers || {});
             setTeamData(savedTeams || teams);
-            setCurrentPicker(savedTeams ? savedTeams[Math.floor(Math.random() * savedTeams.length)] : teams[0]);
+            setCurrentPicker(
+                savedTeams
+                    ? savedTeams[Math.floor(Math.random() * savedTeams.length)]
+                    : teams[0]
+            );
         } else {
             setTeamData(teams);
             setCurrentPicker(teams[Math.floor(Math.random() * teams.length)]);
@@ -38,6 +51,28 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
             setIsGameComplete(true);
         }
     }, [answeredQuestions, quizData]);
+
+    // WebSocket for real-time updates
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:5000');
+
+        socket.onopen = () => console.log('WebSocket connected');
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'update') {
+                setLoggedInTeams(data.loggedInTeams); // Update logged-in teams dynamically
+            }
+        };
+
+        socket.onerror = (error) => console.error('WebSocket error:', error);
+
+        socket.onclose = () => console.log('WebSocket disconnected');
+
+        return () => {
+            socket.close();
+        };
+    }, []);
 
     const openQuestion = (question) => {
         if (answeredQuestions[question.id]) return;
@@ -110,32 +145,29 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
         setIsLeaderboardVisible((prev) => !prev);
     };
 
+    const toggleTeamListVisibility = () => {
+        setIsTeamListVisible((prev) => !prev);
+    };
+
     const sortedTeams = [...teamData].sort((a, b) => b.points - a.points);
 
     return (
         <div className="quizgame-container">
             {/* Exit Button */}
-            <button
-                className="exit-button"
-                onClick={onExit}
-                title="Exit to Opening Page"
-            >
+            <button className="exit-button" onClick={onExit} title="Exit to Opening Page">
                 Exit
             </button>
 
             {currentPicker && !isGameComplete && (
                 <div className="current-picker">
                     <h2>
-                        Current Picker:{" "}
+                        Current Picker:{' '}
                         <span style={{ color: currentPicker.color }}>{currentPicker.name}</span>
                     </h2>
                 </div>
             )}
 
-            <button
-                onClick={toggleLeaderboardVisibility}
-                className="leaderboard-button"
-            >
+            <button onClick={toggleLeaderboardVisibility} className="leaderboard-button">
                 {isLeaderboardVisible ? 'Hide Leaderboard' : 'Show Leaderboard'}
             </button>
 
@@ -146,6 +178,28 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
                         {sortedTeams.map((team, index) => (
                             <li key={team.name}>
                                 {index + 1}. {team.name}: {team.points} points
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {/* Team List Toggle */}
+            <button onClick={toggleTeamListVisibility} className="leaderboard-button">
+                {isTeamListVisible ? 'Hide Team List' : 'Show Team List'}
+            </button>
+
+            {isTeamListVisible && (
+                <div className="team-list-dropdown">
+                    <ul>
+                        {teams.map((team) => (
+                            <li
+                                key={team.name}
+                                style={{
+                                    color: loggedInTeams.includes(team.name) ? 'green' : 'red',
+                                }}
+                            >
+                                {team.name}
                             </li>
                         ))}
                     </ul>
@@ -192,12 +246,12 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
                                 onClick={() => handleTeamWin(team)}
                                 style={{
                                     backgroundColor: team.color,
-                                    padding: "10px",
-                                    margin: "5px",
-                                    border: "none",
-                                    borderRadius: "5px",
-                                    color: "white",
-                                    cursor: "pointer"
+                                    padding: '10px',
+                                    margin: '5px',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    color: 'white',
+                                    cursor: 'pointer',
                                 }}
                                 disabled={timeLeft === 0}
                             >
@@ -207,13 +261,13 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
                         <button
                             onClick={handleNoWinner}
                             style={{
-                                backgroundColor: "black",
-                                padding: "10px",
-                                margin: "5px",
-                                border: "none",
-                                borderRadius: "5px",
-                                color: "white",
-                                cursor: "pointer"
+                                backgroundColor: 'black',
+                                padding: '10px',
+                                margin: '5px',
+                                border: 'none',
+                                borderRadius: '5px',
+                                color: 'white',
+                                cursor: 'pointer',
                             }}
                             disabled={timeLeft === 0}
                         >
@@ -238,13 +292,13 @@ function QuizGame({ quizData = [], teams, saveFileName, saveGameProgress, onExit
                         <button
                             onClick={() => window.location.reload()}
                             style={{
-                                backgroundColor: "#4caf50",
-                                padding: "10px",
-                                marginTop: "20px",
-                                border: "none",
-                                borderRadius: "5px",
-                                color: "white",
-                                cursor: "pointer"
+                                backgroundColor: '#4caf50',
+                                padding: '10px',
+                                marginTop: '20px',
+                                border: 'none',
+                                borderRadius: '5px',
+                                color: 'white',
+                                cursor: 'pointer',
                             }}
                         >
                             Restart Game
