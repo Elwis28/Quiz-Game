@@ -19,7 +19,7 @@ function QuizGame({
     const [timeLeft, setTimeLeft] = useState(60);
     const [currentPicker, setCurrentPicker] = useState(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
-    const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams); // Real-time team login state
+    const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams);
 
     useEffect(() => {
         const savedGame = localStorage.getItem(saveFileName);
@@ -52,7 +52,6 @@ function QuizGame({
         }
     }, [answeredQuestions, quizData]);
 
-    // WebSocket for real-time updates
     useEffect(() => {
         const socket = new WebSocket('ws://localhost:5000');
 
@@ -60,8 +59,10 @@ function QuizGame({
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
+
+            // Update loggedInTeams list only
             if (data.type === 'update') {
-                setLoggedInTeams(data.loggedInTeams); // Update logged-in teams dynamically
+                setLoggedInTeams(data.loggedInTeams);
             }
         };
 
@@ -149,11 +150,30 @@ function QuizGame({
         setIsTeamListVisible((prev) => !prev);
     };
 
+    const handleKickTeam = async (teamName) => {
+        try {
+            await fetch('http://localhost:5000/kick-team', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ teamName }),
+            });
+        } catch (error) {
+            console.error('Failed to kick team:', error);
+        }
+    };
+
+    const handleKickAllTeams = async () => {
+        try {
+            await fetch('http://localhost:5000/kick-all-teams', { method: 'POST' });
+        } catch (error) {
+            console.error('Failed to kick all teams:', error);
+        }
+    };
+
     const sortedTeams = [...teamData].sort((a, b) => b.points - a.points);
 
     return (
         <div className="quizgame-container">
-            {/* Exit Button */}
             <button className="exit-button" onClick={onExit} title="Exit to Opening Page">
                 Exit
             </button>
@@ -161,8 +181,7 @@ function QuizGame({
             {currentPicker && !isGameComplete && (
                 <div className="current-picker">
                     <h2>
-                        Current Picker:{' '}
-                        <span style={{ color: currentPicker.color }}>{currentPicker.name}</span>
+                        Current Picker: <span style={{ color: currentPicker.color }}>{currentPicker.name}</span>
                     </h2>
                 </div>
             )}
@@ -184,7 +203,6 @@ function QuizGame({
                 </div>
             )}
 
-            {/* Team List Toggle */}
             <button onClick={toggleTeamListVisibility} className="leaderboard-button">
                 {isTeamListVisible ? 'Hide Team List' : 'Show Team List'}
             </button>
@@ -200,9 +218,36 @@ function QuizGame({
                                 }}
                             >
                                 {team.name}
+                                <button
+                                    onClick={() => handleKickTeam(team.name)}
+                                    style={{
+                                        marginLeft: '10px',
+                                        color: 'white',
+                                        backgroundColor: 'red',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    ✕
+                                </button>
                             </li>
                         ))}
                     </ul>
+                    <button
+                        onClick={handleKickAllTeams}
+                        style={{
+                            marginTop: '10px',
+                            backgroundColor: 'red',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            padding: '10px',
+                        }}
+                    >
+                        Kick All Teams
+                    </button>
                 </div>
             )}
 
@@ -311,4 +356,3 @@ function QuizGame({
 }
 
 export default QuizGame;
-

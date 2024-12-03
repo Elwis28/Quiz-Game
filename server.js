@@ -19,24 +19,17 @@ let gameState = {
 const wss = new Server({ noServer: true });
 
 wss.on('connection', (ws) => {
-    // Send initial state to the new client
     ws.send(JSON.stringify({ type: 'init', loggedInTeams: gameState.loggedInTeams }));
-
-    ws.on('message', (message) => {
-        console.log('Message from client:', message);
-    });
 });
 
-// Broadcast to all WebSocket clients
 function broadcast(data) {
     wss.clients.forEach((client) => {
-        if (client.readyState === 1) { // Ensure the client is open
+        if (client.readyState === 1) {
             client.send(JSON.stringify(data));
         }
     });
 }
 
-// Handle HTTP Upgrade for WebSocket
 const server = app.listen(5000, () => console.log('Server running on port 5000'));
 server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, (ws) => {
@@ -85,13 +78,34 @@ app.post('/login', (req, res) => {
         return res.status(400).json({ message: 'Invalid team name.' });
     }
 
-    // Generate a unique token for this team
     const token = crypto.randomBytes(16).toString('hex');
     teamTokens[teamName] = token;
 
     gameState.loggedInTeams.push(teamName);
     broadcast({ type: 'update', loggedInTeams: gameState.loggedInTeams });
-    res.json({ message: 'Login successful', loggedInTeams: gameState.loggedInTeams, token });
+    res.json({ token });
+});
+
+// Kick a specific team
+app.post('/kick-team', (req, res) => {
+    const { teamName } = req.body;
+
+    if (!gameState.loggedInTeams.includes(teamName)) {
+        return res.status(400).json({ message: 'Team is not logged in.' });
+    }
+
+    gameState.loggedInTeams = gameState.loggedInTeams.filter((name) => name !== teamName);
+    delete teamTokens[teamName];
+    broadcast({ type: 'update', loggedInTeams: gameState.loggedInTeams, kickedTeam: teamName });
+    res.json({ message: `${teamName} has been kicked out.` });
+});
+
+// Kick all teams
+app.post('/kick-all-teams', (req, res) => {
+    gameState.loggedInTeams = [];
+    teamTokens = {};
+    broadcast({ type: 'update', loggedInTeams: [] });
+    res.json({ message: 'All teams have been kicked out.' });
 });
 
 // Verify access to HandsUp page
@@ -115,3 +129,4 @@ app.post('/reset-game', (req, res) => {
     broadcast({ type: 'update', loggedInTeams: gameState.loggedInTeams });
     res.json(gameState);
 });
+

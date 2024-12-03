@@ -30,7 +30,31 @@ function HandsUp({ isGameStarted }) {
         };
 
         verifyAccess();
-    }, [teamName]);
+
+        const socket = new WebSocket('ws://localhost:5000');
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            // If this team was kicked, redirect to login
+            if (data.kickedTeam && data.kickedTeam === teamName) {
+                sessionStorage.removeItem('teamToken');
+                navigate('/login');
+            }
+
+            // If all teams were kicked, redirect all to login
+            if (data.type === 'update' && data.loggedInTeams.length === 0) {
+                sessionStorage.removeItem('teamToken');
+                navigate('/login');
+            }
+        };
+
+        socket.onclose = () => console.log('WebSocket disconnected');
+
+        return () => {
+            socket.close();
+        };
+    }, [teamName, navigate]);
 
     if (!isGameStarted) {
         return (
@@ -64,5 +88,3 @@ function HandsUp({ isGameStarted }) {
 }
 
 export default HandsUp;
-
-
