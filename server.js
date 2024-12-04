@@ -16,6 +16,8 @@ let gameState = {
     isQuestionActive: false,
 };
 
+const PORT = process.env.PORT || 5000; // Use Heroku's PORT or fallback to 5000 for local development
+
 // WebSocket server for real-time updates
 const wss = new Server({ noServer: true });
 
@@ -31,7 +33,7 @@ function broadcast(data) {
     });
 }
 
-const server = app.listen(5000, () => console.log('Server running on port 5000'));
+const server = app.listen(PORT, () => console.log('Server running on port ' + PORT));
 server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, (ws) => {
         wss.emit('connection', ws, request);
