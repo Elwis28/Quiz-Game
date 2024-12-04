@@ -22,6 +22,8 @@ function QuizGame({
     const [isGameComplete, setIsGameComplete] = useState(false);
     const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams || []);
 
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
     useEffect(() => {
         const savedGame = localStorage.getItem(saveFileName);
         if (savedGame) {
@@ -83,7 +85,7 @@ function QuizGame({
         setTimeLeft(60);
 
         // Activate the question for all teams
-        axios.post('http://localhost:5000/toggle-question', { isQuestionActive: true });
+        axios.post(`${API_URL}/toggle-question`, { isQuestionActive: true });
     };
 
     const closeModal = () => {
@@ -91,7 +93,7 @@ function QuizGame({
         setTimeLeft(60);
 
         // Deactivate the question for all teams
-        axios.post('http://localhost:5000/toggle-question', { isQuestionActive: false });
+        axios.post(`${API_URL}/toggle-question`, { isQuestionActive: false });
     };
 
     const handleTeamWin = (team) => {
@@ -159,7 +161,7 @@ function QuizGame({
 
     const handleKickTeam = async (teamName) => {
         try {
-            await fetch('http://localhost:5000/kick-team', {
+            await fetch(`${API_URL}/kick-team`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ teamName }),
@@ -171,7 +173,7 @@ function QuizGame({
 
     const handleKickAllTeams = async () => {
         try {
-            await fetch('http://localhost:5000/kick-all-teams', { method: 'POST' });
+            await fetch(`${API_URL}/kick-all-teams`, { method: 'POST' });
         } catch (error) {
             console.error('Failed to kick all teams:', error);
         }

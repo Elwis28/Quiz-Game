@@ -8,7 +8,7 @@ function LoginPage({ isGameStarted, teams, onLogin, loggedInTeams }) {
     const [selectedTeam, setSelectedTeam] = useState(""); // Selected team for login
     const navigate = useNavigate();
 
-    const API_URL = 'http://localhost:5000'; // Backend server URL
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
     // src/LoginPage.js
     const handleLogin = async () => {

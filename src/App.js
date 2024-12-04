@@ -15,7 +15,7 @@ function App() {
     const [gameData, setGameData] = useState(quizData);
     const [saveFileName, setSaveFileName] = useState(null);
 
-    const API_URL = 'http://localhost:5000'; // Backend server URL
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
     useEffect(() => {
         // Fetch game state from the backend
