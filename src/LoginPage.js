@@ -2,19 +2,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
+import API_URL from './config';
 import axios from "axios";
 
 function LoginPage({ isGameStarted, teams, onLogin, loggedInTeams }) {
     const [selectedTeam, setSelectedTeam] = useState(""); // Selected team for login
     const navigate = useNavigate();
 
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
     // src/LoginPage.js
     const handleLogin = async () => {
         if (selectedTeam && !loggedInTeams.includes(selectedTeam)) {
             try {
-                const { data } = await axios.post(`${API_URL}/login`, { teamName: selectedTeam });
+                const { data } = await axios.post(`${API_URL}/api/login`, { teamName: selectedTeam });
                 sessionStorage.setItem('teamToken', data.token); // Store token securely
                 onLogin(selectedTeam);
                 navigate(`/handsup/${selectedTeam}`);

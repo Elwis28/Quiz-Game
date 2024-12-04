@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import API_URL from './config';
 import axios from 'axios';
 import './App.css';
 
@@ -9,13 +10,18 @@ function HandsUp({ isGameStarted }) {
     const [isAuthorized, setIsAuthorized] = useState(null);
     const [isQuestionActive, setIsQuestionActive] = useState(false);
 
+    const WS_URL =
+        process.env.NODE_ENV === 'development'
+            ? 'ws://localhost:5000'
+            : `wss://${window.location.host}`;
+
     useEffect(() => {
         // Verify the team's access to the HandsUp page
         const verifyAccess = async () => {
             const token = sessionStorage.getItem('teamToken');
 
             try {
-                const { data } = await axios.post('http://localhost:5000/verify-handsup', {
+                const { data } = await axios.post(`${API_URL}api/verify-handsup`, {
                     teamName,
                     token,
                 });
@@ -32,7 +38,7 @@ function HandsUp({ isGameStarted }) {
 
         verifyAccess();
 
-        const socket = new WebSocket('ws://localhost:5000');
+        const socket = new WebSocket(WS_URL);
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -51,6 +57,11 @@ function HandsUp({ isGameStarted }) {
                     navigate('/login');
                 }
             }
+
+            // Handle WebSocket errors
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
 
             if (data.type === 'update' && data.gameState) {
 
@@ -84,7 +95,7 @@ function HandsUp({ isGameStarted }) {
         return (
             <div className="handsup-container">
                 <h2>Access Forbidden</h2>
-                <button onClick={() => navigate('/')} className="login-button">
+                <button onClick={() => navigate('/login')} className="login-button">
                     Go Back
                 </button>
             </div>

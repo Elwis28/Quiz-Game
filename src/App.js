@@ -6,6 +6,7 @@ import QuizGame from './QuizGame';
 import LoginPage from './LoginPage';
 import HandsUp from './HandsUp';
 import quizData from './QuizData';
+import API_URL from './config';
 import axios from 'axios';
 
 function App() {
@@ -15,13 +16,11 @@ function App() {
     const [gameData, setGameData] = useState(quizData);
     const [saveFileName, setSaveFileName] = useState(null);
 
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
     useEffect(() => {
         // Fetch game state from the backend
         const fetchGameState = async () => {
             try {
-                const { data } = await axios.get(`${API_URL}/game-state`);
+                const { data } = await axios.get(`${API_URL}/api/game-state`);
                 setIsGameStarted(data.isGameStarted);
                 setTeams(data.teams);
                 setLoggedInTeams(data.loggedInTeams);
@@ -52,7 +51,7 @@ function App() {
         setLoggedInTeams([]);
 
         // Sync with backend
-        axios.post(`${API_URL}/start-game`, { teams })
+        axios.post(`${API_URL}/api/start-game`, { teams })
             .catch((error) => console.error('Error starting game:', error));
     };
 
@@ -70,7 +69,7 @@ function App() {
         setLoggedInTeams([]);
 
         // Sync with backend
-        axios.post(`${API_URL}/start-game`, { teams: savedData.teams || [] })
+        axios.post(`${API_URL}/api/start-game`, { teams: savedData.teams || [] })
             .catch((error) => console.error('Error loading game:', error));
     };
 
@@ -82,7 +81,7 @@ function App() {
         localStorage.setItem('teams', JSON.stringify(updatedTeams));
 
         // Sync with backend
-        axios.post(`${API_URL}/add-team`, { team })
+        axios.post(`${API_URL}/api/add-team`, { team })
             .catch((error) => console.error('Error adding team:', error));
     };
 
@@ -94,13 +93,13 @@ function App() {
         localStorage.setItem('teams', JSON.stringify(updatedTeams));
 
         // Sync with backend
-        axios.post(`${API_URL}/delete-team`, { teamName })
+        axios.post(`${API_URL}/api/delete-team`, { teamName })
             .catch((error) => console.error('Error deleting team:', error));
     };
 
     const handleLogin = async (teamName) => {
         try {
-            const { data } = await axios.post(`${API_URL}/login`, { teamName });
+            const { data } = await axios.post(`${API_URL}/api/login`, { teamName });
             setLoggedInTeams(data.loggedInTeams);
         } catch (error) {
             console.error('Error logging in team:', error.response?.data?.message || error.message);
