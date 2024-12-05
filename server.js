@@ -27,6 +27,12 @@ wss.on('connection', (ws) => {
 // Serve static files from build folder
 app.use(express.static(path.join(__dirname, 'build')));
 
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://quiz-game-v2-9046345b6d4d.herokuapp.com'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true
+}));
+
 // Use the modularized API routes
 app.use('/api', apiRoutes);
 
@@ -34,12 +40,6 @@ app.use('/api', apiRoutes);
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-
-app.use(cors({
-    origin: ['http://localhost:3000', 'https://quiz-game-v2-9046345b6d4d.herokuapp.com'],
-    methods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true
-}));
 
 // Start the server
 const PORT = process.env.PORT || 5000;
