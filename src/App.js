@@ -133,16 +133,12 @@ function App() {
                     <Route
                         path="/login"
                         element={
-                            isGameStarted ? (
                                 <LoginPage
                                     isGameStarted={isGameStarted}
                                     teams={teams.filter((team) => !loggedInTeams.includes(team.name))}
                                     onLogin={handleLogin}
                                     loggedInTeams={loggedInTeams}
                                 />
-                            ) : (
-                                <Navigate to="/" />
-                            )
                         }
                     />
                     <Route

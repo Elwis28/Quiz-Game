@@ -44,9 +44,9 @@ router.post('/start-game', (req, res) => {
 
 router.get('/game-state', (req, res) => {
     res.json({
-        isGameStarted: gameState.isGameStarted,
-        teams: gameState.teams,
-        loggedInTeams: gameState.loggedInTeams,
+        isGameStarted: gameState.isGameStarted || false,
+        teams: gameState.teams || [],
+        loggedInTeams: gameState.loggedInTeams || [],
     });
 });
 
