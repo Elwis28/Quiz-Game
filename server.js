@@ -36,7 +36,7 @@ app.get('*', (req, res) => {
 });
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://shrouded-river-15106-69fad24cfbc6.herokuapp.com'],
+    origin: ['http://localhost:3000', 'https://quiz-game-v2-9046345b6d4d.herokuapp.com'],
     methods: ['GET', 'POST'],
     credentials: true
 }));

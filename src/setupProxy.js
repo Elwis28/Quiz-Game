@@ -8,7 +8,6 @@ module.exports = function (app) {
         })
     );
 
-    // Fix allowedHosts error by adding middleware to allow all origins
     app.use((req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
