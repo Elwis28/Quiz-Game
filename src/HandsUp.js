@@ -21,7 +21,7 @@ function HandsUp({ isGameStarted }) {
             const token = sessionStorage.getItem('teamToken');
 
             try {
-                const { data } = await axios.post(`${API_URL}api/verify-handsup`, {
+                const { data } = await axios.post(`${API_URL}/api/verify-handsup`, {
                     teamName,
                     token,
                 });
