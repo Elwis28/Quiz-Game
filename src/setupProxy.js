@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function (app) {
     app.use(
         createProxyMiddleware('/api', {
-            target: 'http://localhost:5000', // Your backend server
+            target: process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://quiz-game-v2-9046345b6d4d.herokuapp.com',
             changeOrigin: true,
         })
     );

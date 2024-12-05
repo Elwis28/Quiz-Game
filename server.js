@@ -35,6 +35,12 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://quiz-game-v2-9046345b6d4d.herokuapp.com'],
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
