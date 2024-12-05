@@ -10,6 +10,7 @@ let gameState = {
     loggedInTeams: [],
     isQuestionActive: false,
 };
+let buttonPresses = [];
 
 function broadcast(wss, data) {
     wss.clients.forEach((client) => {
@@ -101,6 +102,26 @@ router.post('/reset-game', (req, res) => {
     };
     broadcast(req.app.get('wss'), { type: 'update', loggedInTeams: gameState.loggedInTeams });
     res.json(gameState);
+});
+
+// Add WebSocket message handling for button clicks
+router.post('/reset-button-presses', (req, res) => {
+    buttonPresses = []; // Reset the list when the modal closes
+    broadcast(req.app.get('wss'), { type: 'reset-button-presses' });
+    res.json({ success: true });
+});
+
+router.post('/record-button-click', (req, res) => {
+    const { teamName, timeElapsed } = req.body;
+
+    // Ensure the team hasn't clicked already
+    if (buttonPresses.find((entry) => entry.teamName === teamName)) {
+        return res.status(400).json({ message: 'Button already clicked by this team' });
+    }
+
+    buttonPresses.push({ teamName, timeElapsed });
+    broadcast(req.app.get('wss'), { type: 'button-click', buttonPresses });
+    res.json({ success: true });
 });
 
 module.exports = router;

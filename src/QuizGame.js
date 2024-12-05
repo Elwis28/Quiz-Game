@@ -1,5 +1,5 @@
 // src/QuizGame.js
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Modal from './Modal';
 import './App.css';
 import axios from "axios";
@@ -22,6 +22,7 @@ function QuizGame({
     const [currentPicker, setCurrentPicker] = useState(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
     const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams || []);
+    const [buttonPressList, setButtonPressList] = useState([]);
 
     const WS_URL =
         process.env.NODE_ENV === 'development'
@@ -31,7 +32,7 @@ function QuizGame({
     useEffect(() => {
         const savedGame = localStorage.getItem(saveFileName);
         if (savedGame) {
-            const { answeredQuestions: savedAnswers, teams: savedTeams } = JSON.parse(savedGame);
+            const {answeredQuestions: savedAnswers, teams: savedTeams} = JSON.parse(savedGame);
             setAnsweredQuestions(savedAnswers || {});
             setTeamData(savedTeams || teams);
             setCurrentPicker(
@@ -82,6 +83,30 @@ function QuizGame({
         };
     }, []);
 
+    useEffect(() => {
+        const socket = new WebSocket(WS_URL);
+
+        socket.onopen = () => console.log('WebSocket connected');
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'button-click') {
+                setButtonPressList(data.buttonPresses); // Update button press list in real-time
+            }
+
+            if (data.type === 'reset-button-presses') {
+                setButtonPressList([]); // Reset list when modal closes
+            }
+        };
+
+        socket.onerror = (error) => console.error('WebSocket error:', error);
+
+        socket.onclose = () => console.log('WebSocket disconnected');
+
+        return () => socket.close();
+    }, []);
+
     const openQuestion = (question) => {
         if (answeredQuestions[question.id]) return;
 
@@ -89,7 +114,7 @@ function QuizGame({
         setTimeLeft(60);
 
         // Activate the question for all teams
-        axios.post(`${API_URL}/api/toggle-question`, { isQuestionActive: true });
+        axios.post(`${API_URL}/api/toggle-question`, {isQuestionActive: true});
     };
 
     const closeModal = () => {
@@ -97,7 +122,10 @@ function QuizGame({
         setTimeLeft(60);
 
         // Deactivate the question for all teams
-        axios.post(`${API_URL}/api/toggle-question`, { isQuestionActive: false });
+        axios.post(`${API_URL}/api/toggle-question`, {isQuestionActive: false});
+
+        // Reset the button press list
+        axios.post(`${API_URL}/api/reset-button-presses`);
     };
 
     const handleTeamWin = (team) => {
@@ -126,13 +154,13 @@ function QuizGame({
         closeModal();
     };
 
-    const updateGameState = ({ questionId, teamColor, points }) => {
-        const updatedAnswers = { ...answeredQuestions, [questionId]: teamColor };
+    const updateGameState = ({questionId, teamColor, points}) => {
+        const updatedAnswers = {...answeredQuestions, [questionId]: teamColor};
         setAnsweredQuestions(updatedAnswers);
 
         if (points > 0) {
             const updatedTeams = teamData.map((team) =>
-                team.color === teamColor ? { ...team, points: team.points + points } : team
+                team.color === teamColor ? {...team, points: team.points + points} : team
             );
             setTeamData(updatedTeams);
         }
@@ -167,8 +195,8 @@ function QuizGame({
         try {
             await fetch(`${API_URL}/api/kick-team`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ teamName }),
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({teamName}),
             });
         } catch (error) {
             console.error('Failed to kick team:', error);
@@ -177,7 +205,7 @@ function QuizGame({
 
     const handleKickAllTeams = async () => {
         try {
-            await fetch(`${API_URL}/api/kick-all-teams`, { method: 'POST' });
+            await fetch(`${API_URL}/api/kick-all-teams`, {method: 'POST'});
         } catch (error) {
             console.error('Failed to kick all teams:', error);
         }
@@ -194,7 +222,7 @@ function QuizGame({
             {currentPicker && !isGameComplete && (
                 <div className="current-picker">
                     <h2>
-                        Current Picker: <span style={{ color: currentPicker.color }}>{currentPicker.name}</span>
+                        Current Picker: <span style={{color: currentPicker.color}}>{currentPicker.name}</span>
                     </h2>
                 </div>
             )}
@@ -275,7 +303,7 @@ function QuizGame({
                                 <div
                                     key={question.id}
                                     className={`quiz-box ${answeredQuestions[question.id] ? 'locked' : ''}`}
-                                    style={{ backgroundColor: answeredQuestions[question.id] || '#4caf50' }}
+                                    style={{backgroundColor: answeredQuestions[question.id] || '#4caf50'}}
                                     onClick={() => openQuestion(question)}
                                 >
                                     <span>{question.id}.</span>
@@ -299,6 +327,17 @@ function QuizGame({
                         <h3>{modalContent.content}</h3>
                         <p>Points: {modalContent.points}</p>
                     </div>
+                    {/* Display the list of button presses */}
+                    <div className="button-press-list">
+                        <h4>Teams Who raised hands:</h4>
+                        <ul>
+                            {buttonPressList.map((entry, index) => (
+                                <li key={index}>
+                                    {index + 1}. {entry.teamName}: {entry.timeElapsed}s
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     <div className="team-buttons">
                         {teamData.map((team) => (
                             <button
@@ -313,7 +352,6 @@ function QuizGame({
                                     color: 'white',
                                     cursor: 'pointer',
                                 }}
-                                disabled={timeLeft === 0}
                             >
                                 {team.name}
                             </button>
@@ -329,7 +367,6 @@ function QuizGame({
                                 color: 'white',
                                 cursor: 'pointer',
                             }}
-                            disabled={timeLeft === 0}
                         >
                             None
                         </button>
@@ -341,7 +378,7 @@ function QuizGame({
                 <Modal onClose={() => setIsGameComplete(false)}>
                     <div>
                         <h1>WINNER</h1>
-                        <h2 style={{ color: sortedTeams[0].color }}>{sortedTeams[0].name}</h2>
+                        <h2 style={{color: sortedTeams[0].color}}>{sortedTeams[0].name}</h2>
                         <ul>
                             {sortedTeams.map((team, index) => (
                                 <li key={team.name}>

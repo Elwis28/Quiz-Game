@@ -9,6 +9,8 @@ function HandsUp({ isGameStarted }) {
     const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(null);
     const [isQuestionActive, setIsQuestionActive] = useState(false);
+    const [startTime, setStartTime] = useState(null); // Record when the button becomes available
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
 
     const WS_URL =
         process.env.NODE_ENV === 'development'
@@ -70,6 +72,14 @@ function HandsUp({ isGameStarted }) {
                 setIsQuestionActive(data.gameState.isQuestionActive || false);
             }
           }
+
+            if (data.type === 'update' && data.gameState) {
+                setIsQuestionActive(data.gameState.isQuestionActive || false);
+                if (data.gameState.isQuestionActive) {
+                    setStartTime(Date.now());
+                    setIsButtonClicked(false); // Reset button state when a new question starts
+                }
+            }
         };
 
         socket.onclose = () => console.log('WebSocket disconnected');
@@ -78,6 +88,22 @@ function HandsUp({ isGameStarted }) {
             socket.close();
         };
     }, [teamName, navigate]);
+
+    const handleButtonClick = async () => {
+        if (!isQuestionActive || isButtonClicked) return;
+
+        const timeElapsed = ((Date.now() - startTime) / 1000).toFixed(2); // Calculate elapsed time
+        setIsButtonClicked(true);
+
+        try {
+            await axios.post(`${API_URL}/api/record-button-click`, {
+                teamName,
+                timeElapsed,
+            });
+        } catch (error) {
+            console.error('Error recording button click:', error.message);
+        }
+    };
 
     if (!isGameStarted) {
         return (
@@ -108,14 +134,14 @@ function HandsUp({ isGameStarted }) {
             <p>Prepare to answer the questions!</p>
             <button
                 className="big-green-button"
-                disabled={!isQuestionActive}
+                disabled={!isQuestionActive || isButtonClicked}
                 style={{
-                    backgroundColor: isQuestionActive ? '#4caf50' : '#f44336',
-                    cursor: isQuestionActive ? 'pointer' : 'not-allowed',
+                    backgroundColor: isButtonClicked ? '#999' : isQuestionActive ? '#4caf50' : '#f44336',
+                    cursor: isButtonClicked || !isQuestionActive ? 'not-allowed' : 'pointer',
                 }}
-                onClick={() => console.log(`${teamName} pressed the button`)}
+                onClick={handleButtonClick}
             >
-                Big Green Button
+                Hands up!
             </button>
         </div>
     );

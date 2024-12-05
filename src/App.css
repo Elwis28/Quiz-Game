@@ -523,3 +523,8 @@ select {
   background-color: #45a049;
   transform: scale(1.1);
 }
+
+.button-press-list ul {
+  list-style: none;
+  padding: 0;
+}
