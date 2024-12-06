@@ -244,7 +244,7 @@ function QuizGame({
                 </div>
             )}
 
-            <button onClick={toggleTeamListVisibility} className="leaderboard-button">
+            <button onClick={toggleTeamListVisibility} className="team-list-button">
                 {isTeamListVisible ? 'Hide Team List' : 'Show Team List'}
             </button>
 
@@ -333,7 +333,7 @@ function QuizGame({
                         <ul>
                             {buttonPressList.map((entry, index) => (
                                 <li key={index}>
-                                    {index + 1}. {entry.teamName}: {entry.timeElapsed}s
+                                    {index + 1}. {entry.teamName}
                                 </li>
                             ))}
                         </ul>

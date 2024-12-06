@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import API_URL from './config';
 import axios from 'axios';
 import './App.css';
 
-function HandsUp({ isGameStarted }) {
-    const { teamName } = useParams();
+function HandsUp({isGameStarted}) {
+    const {teamName} = useParams();
     const navigate = useNavigate();
     const [isAuthorized, setIsAuthorized] = useState(null);
     const [isQuestionActive, setIsQuestionActive] = useState(false);
-    const [startTime, setStartTime] = useState(null); // Record when the button becomes available
     const [isButtonClicked, setIsButtonClicked] = useState(false);
 
     const WS_URL =
@@ -18,7 +17,6 @@ function HandsUp({ isGameStarted }) {
             : `wss://${window.location.host}`;
 
     useEffect(() => {
-        // Verify the team's access to the HandsUp page
         const verifyAccess = async () => {
             const token = sessionStorage.getItem('teamToken');
 
@@ -39,66 +37,51 @@ function HandsUp({ isGameStarted }) {
         };
 
         verifyAccess();
+    }, [teamName]);
+
+    useEffect(() => {
+        const fetchQuestionState = async () => {
+            try {
+                const { data } = await axios.get(`${API_URL}/api/game-state`);
+                setIsQuestionActive(data.isQuestionActive || false);
+
+                // Reset button click state if the question is inactive
+                if (!data.isQuestionActive) {
+                    setIsButtonClicked(false);
+                    console.error('Question state: ', data.isQuestionActive);
+                }
+            } catch (error) {
+                console.error('Error fetching game state:', error.message);
+            }
+        };
+
+        fetchQuestionState();
 
         const socket = new WebSocket(WS_URL);
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
-            if (data.type === 'update' && data.loggedInTeams) {
-
-                // If this team was kicked, redirect to login
-                if (data.kickedTeam && data.kickedTeam === teamName) {
-                    sessionStorage.removeItem('teamToken');
-                    navigate('/login');
-                }
-
-                // If all teams were kicked, redirect all to login
-                if (data.type === 'update' && data.loggedInTeams.length === 0) {
-                    sessionStorage.removeItem('teamToken');
-                    navigate('/login');
-                }
-            }
-
-            // Handle WebSocket errors
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-
-            if (data.type === 'update' && data.gameState) {
-
-            // Update the question active state
             if (data.type === 'update' && data.gameState) {
                 setIsQuestionActive(data.gameState.isQuestionActive || false);
-            }
-          }
 
-            if (data.type === 'update' && data.gameState) {
-                setIsQuestionActive(data.gameState.isQuestionActive || false);
-                if (data.gameState.isQuestionActive) {
-                    setStartTime(Date.now());
-                    setIsButtonClicked(false); // Reset button state when a new question starts
+                if (!data.gameState.isQuestionActive) {
+                    setIsButtonClicked(false);
                 }
             }
         };
 
-        socket.onclose = () => console.log('WebSocket disconnected');
-
-        return () => {
-            socket.close();
-        };
-    }, [teamName, navigate]);
+        return () => socket.close();
+    }, []);
 
     const handleButtonClick = async () => {
         if (!isQuestionActive || isButtonClicked) return;
 
-        const timeElapsed = ((Date.now() - startTime) / 1000).toFixed(2); // Calculate elapsed time
         setIsButtonClicked(true);
 
         try {
             await axios.post(`${API_URL}/api/record-button-click`, {
                 teamName,
-                timeElapsed,
             });
         } catch (error) {
             console.error('Error recording button click:', error.message);
@@ -128,23 +111,23 @@ function HandsUp({ isGameStarted }) {
         );
     }
 
-    return (
-        <div className="handsup-container">
-            <h1>Hands Up: {teamName}</h1>
-            <p>Prepare to answer the questions!</p>
-            <button
-                className="big-green-button"
-                disabled={!isQuestionActive || isButtonClicked}
-                style={{
-                    backgroundColor: isButtonClicked ? '#999' : isQuestionActive ? '#4caf50' : '#f44336',
-                    cursor: isButtonClicked || !isQuestionActive ? 'not-allowed' : 'pointer',
-                }}
-                onClick={handleButtonClick}
-            >
-                Hands up!
-            </button>
-        </div>
-    );
-}
+        return (
+            <div className="handsup-container">
+                <h1>Hands Up: {teamName}</h1>
+                <p>Prepare to answer the questions!</p>
+                <button
+                    className="big-green-button"
+                    disabled={!isQuestionActive || isButtonClicked}
+                    style={{
+                        backgroundColor: isButtonClicked ? '#999' : isQuestionActive ? '#4caf50' : '#999',
+                        cursor: isButtonClicked || !isQuestionActive ? 'not-allowed' : 'pointer',
+                    }}
+                    onClick={handleButtonClick}
+                >
+                    Hands up!
+                </button>
+            </div>
+        );
+    }
 
-export default HandsUp;
+    export default HandsUp;

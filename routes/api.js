@@ -47,6 +47,7 @@ router.get('/game-state', (req, res) => {
         isGameStarted: gameState.isGameStarted || false,
         teams: gameState.teams || [],
         loggedInTeams: gameState.loggedInTeams || [],
+        isQuestionActive: gameState.isQuestionActive || false,
     });
 });
 
@@ -112,14 +113,14 @@ router.post('/reset-button-presses', (req, res) => {
 });
 
 router.post('/record-button-click', (req, res) => {
-    const { teamName, timeElapsed } = req.body;
+    const { teamName } = req.body;
 
     // Ensure the team hasn't clicked already
     if (buttonPresses.find((entry) => entry.teamName === teamName)) {
         return res.status(400).json({ message: 'Button already clicked by this team' });
     }
 
-    buttonPresses.push({ teamName, timeElapsed });
+    buttonPresses.push({ teamName });
     broadcast(req.app.get('wss'), { type: 'button-click', buttonPresses });
     res.json({ success: true });
 });
