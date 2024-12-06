@@ -113,7 +113,7 @@ function HandsUp({isGameStarted}) {
 
         return (
             <div className="handsup-container">
-                <h1>Hands Up: {teamName}</h1>
+                <h1>{teamName}</h1>
                 <p>Prepare to answer the questions!</p>
                 <button
                     className="big-green-button"

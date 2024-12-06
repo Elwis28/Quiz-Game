@@ -23,6 +23,7 @@ function QuizGame({
     const [isGameComplete, setIsGameComplete] = useState(false);
     const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams || []);
     const [buttonPressList, setButtonPressList] = useState([]);
+    const [currentPickerIndex, setCurrentPickerIndex] = useState(0); // Default to the first team
 
     const WS_URL =
         process.env.NODE_ENV === 'development'
@@ -37,39 +38,57 @@ function QuizGame({
                 const savedGame = localStorage.getItem(saveFileName);
                 if (savedGame) {
                     try {
-                        const { answeredQuestions: savedAnswers, teamData: savedTeams } = JSON.parse(savedGame);
+                        const {
+                            answeredQuestions: savedAnswers,
+                            teamData: savedTeams,
+                            currentPickerIndex: savedPickerIndex,
+                        } = JSON.parse(savedGame);
 
                         setAnsweredQuestions(savedAnswers || {});
                         restoredTeams = savedTeams && savedTeams.length > 0 ? savedTeams : teams;
                         setTeamData(restoredTeams);
 
-                        console.log('Restored from localStorage:', { savedAnswers, restoredTeams });
-                        return; // Exit restoration logic after successfully restoring from localStorage
+                        // Restore picker index and picker team
+                        const pickerIndex = savedPickerIndex !== undefined ? savedPickerIndex : 0;
+                        setCurrentPickerIndex(pickerIndex);
+                        if (restoredTeams.length > 0) {
+                            setCurrentPicker(restoredTeams[pickerIndex]); // Set picker to saved index
+                        }
+
+                        console.log('Restored from localStorage:', {
+                            savedAnswers,
+                            restoredTeams,
+                            pickerIndex,
+                        });
+                        return; // Exit restoration logic after successful localStorage restoration
                     } catch (error) {
                         console.error('Failed to parse saved game state:', error);
                     }
                 }
             }
 
-            // Fallback to backend only if no state is restored from localStorage
+            // Fallback to backend or default state
             try {
                 const { data } = await axios.get(`${API_URL}/api/game-state`);
                 setAnsweredQuestions(data.answeredQuestions || {});
                 restoredTeams = data.teamData && data.teamData.length > 0 ? data.teamData : teams;
                 setTeamData(restoredTeams);
 
+                // Set picker index to default (0)
+                setCurrentPickerIndex(0);
+                if (restoredTeams.length > 0) {
+                    setCurrentPicker(restoredTeams[0]); // First team picks by default
+                }
+
                 console.log('Restored from backend:', { answeredQuestions: data.answeredQuestions, teamData: data.teamData });
             } catch (error) {
                 console.error('Error fetching game state from backend:', error);
-            }
-
-            if (restoredTeams.length > 0) {
-                setCurrentPicker(restoredTeams[Math.floor(Math.random() * restoredTeams.length)]);
             }
         };
 
         fetchAndRestoreGameState();
     }, [saveFileName, teams]);
+
 
     useEffect(() => {
         const savedGame = saveFileName && localStorage.getItem(saveFileName);
@@ -93,7 +112,7 @@ function QuizGame({
 
         // Ensure current picker is set to a valid team
         if (restoredTeams.length > 0) {
-            setCurrentPicker(restoredTeams[Math.floor(Math.random() * restoredTeams.length)]);
+            setCurrentPicker(restoredTeams[currentPickerIndex]);
         }
     }, [saveFileName, teams]);
 
@@ -173,9 +192,14 @@ function QuizGame({
         const saveState = {
             answeredQuestions,
             teamData,
+            currentPickerIndex, // Include picker index
         };
 
-        if (Object.keys(answeredQuestions).length === 0 && teamData.length === 0) {
+        if (
+            Object.keys(answeredQuestions).length === 0 &&
+            teamData.length === 0 &&
+            currentPickerIndex === 0
+        ) {
             console.warn('Skipping save of empty state.');
             return;
         }
@@ -186,7 +210,7 @@ function QuizGame({
         } catch (error) {
             console.error('Failed to save game state:', error);
         }
-    }, [answeredQuestions, teamData, saveFileName]);
+    }, [answeredQuestions, teamData, currentPickerIndex, saveFileName]);
 
     useEffect(() => {
         console.log('Setting answeredQuestions:', answeredQuestions);
@@ -253,18 +277,22 @@ function QuizGame({
     };
 
     const rotatePicker = () => {
-        const remainingQuestions = quizData
-            .flatMap((theme) => theme.questions)
-            .filter((q) => !answeredQuestions[q.id]);
+        if (teamData.length === 0) return; // No teams to pick
 
-        if (remainingQuestions.length === 0) {
-            setCurrentPicker(null);
-            return;
+        const nextIndex = (currentPickerIndex + 1) % teamData.length;
+        setCurrentPickerIndex(nextIndex); // Move to the next team
+        setCurrentPicker(teamData[nextIndex]); // Update the picker
+
+        // Save to localStorage
+        try {
+            localStorage.setItem(saveFileName, JSON.stringify({
+                answeredQuestions,
+                teamData,
+                currentPickerIndex: nextIndex, // Save picker index
+            }));
+        } catch (error) {
+            console.error('Failed to save picker state:', error);
         }
-
-        const currentIndex = teamData.findIndex((team) => team.name === currentPicker.name);
-        const nextIndex = (currentIndex + 1) % teamData.length;
-        setCurrentPicker(teamData[nextIndex]);
     };
 
     const toggleLeaderboardVisibility = () => {
