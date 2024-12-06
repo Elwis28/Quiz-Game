@@ -152,12 +152,11 @@ function App() {
                                 <QuizGame
                                     quizData={gameData}
                                     teams={teams}
-                                    loggedInTeams={loggedInTeams} // Pass loggedInTeams correctly
-                                    saveFileName={saveFileName}
+                                    loggedInTeams={loggedInTeams}
+                                    saveFileName="save_20241206" // Define a default save file name
                                     saveGameProgress={(currentTeams, answeredQuestions) => {
-                                        const saveData = { teams: currentTeams, answeredQuestions };
-                                        const fileName = saveFileName || generateSaveFileName();
-                                        localStorage.setItem(fileName, JSON.stringify(saveData));
+                                        const saveData = { teamData: currentTeams, answeredQuestions };
+                                        localStorage.setItem("save_20241206", JSON.stringify(saveData)); // Use consistent save file name
                                     }}
                                     onExit={() => {
                                         setIsGameStarted(false);
@@ -169,6 +168,7 @@ function App() {
                             )
                         }
                     />
+
                 </Routes>
             </div>
         </Router>

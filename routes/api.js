@@ -48,6 +48,8 @@ router.get('/game-state', (req, res) => {
         teams: gameState.teams || [],
         loggedInTeams: gameState.loggedInTeams || [],
         isQuestionActive: gameState.isQuestionActive || false,
+        answeredQuestions: gameState.answeredQuestions || {},
+        teamData: gameState.teamData || [],
     });
 });
 

@@ -30,19 +30,70 @@ function QuizGame({
             : `wss://${window.location.host}`;
 
     useEffect(() => {
-        const savedGame = localStorage.getItem(saveFileName);
+        const fetchAndRestoreGameState = async () => {
+            let restoredTeams = teams;
+
+            if (saveFileName) {
+                const savedGame = localStorage.getItem(saveFileName);
+                if (savedGame) {
+                    try {
+                        const { answeredQuestions: savedAnswers, teamData: savedTeams } = JSON.parse(savedGame);
+
+                        setAnsweredQuestions(savedAnswers || {});
+                        restoredTeams = savedTeams && savedTeams.length > 0 ? savedTeams : teams;
+                        setTeamData(restoredTeams);
+
+                        console.log('Restored from localStorage:', { savedAnswers, restoredTeams });
+                        return; // Exit restoration logic after successfully restoring from localStorage
+                    } catch (error) {
+                        console.error('Failed to parse saved game state:', error);
+                    }
+                }
+            }
+
+            // Fallback to backend only if no state is restored from localStorage
+            try {
+                const { data } = await axios.get(`${API_URL}/api/game-state`);
+                setAnsweredQuestions(data.answeredQuestions || {});
+                restoredTeams = data.teamData && data.teamData.length > 0 ? data.teamData : teams;
+                setTeamData(restoredTeams);
+
+                console.log('Restored from backend:', { answeredQuestions: data.answeredQuestions, teamData: data.teamData });
+            } catch (error) {
+                console.error('Error fetching game state from backend:', error);
+            }
+
+            if (restoredTeams.length > 0) {
+                setCurrentPicker(restoredTeams[Math.floor(Math.random() * restoredTeams.length)]);
+            }
+        };
+
+        fetchAndRestoreGameState();
+    }, [saveFileName, teams]);
+
+    useEffect(() => {
+        const savedGame = saveFileName && localStorage.getItem(saveFileName);
+        let restoredTeams = teams;
+
         if (savedGame) {
-            const {answeredQuestions: savedAnswers, teams: savedTeams} = JSON.parse(savedGame);
-            setAnsweredQuestions(savedAnswers || {});
-            setTeamData(savedTeams || teams);
-            setCurrentPicker(
-                savedTeams
-                    ? savedTeams[Math.floor(Math.random() * savedTeams.length)]
-                    : teams[0]
-            );
+            try {
+                const { answeredQuestions: savedAnswers, teamData: savedTeams } = JSON.parse(savedGame);
+
+                // Restore state from saved file or fallback to default props
+                setAnsweredQuestions(savedAnswers || {});
+                restoredTeams = savedTeams && savedTeams.length > 0 ? savedTeams : teams;
+                setTeamData(restoredTeams);
+            } catch (error) {
+                console.error('Failed to parse saved game state:', error);
+            }
         } else {
+            // Fresh game: Use teams from props
             setTeamData(teams);
-            setCurrentPicker(teams[Math.floor(Math.random() * teams.length)]);
+        }
+
+        // Ensure current picker is set to a valid team
+        if (restoredTeams.length > 0) {
+            setCurrentPicker(restoredTeams[Math.floor(Math.random() * restoredTeams.length)]);
         }
     }, [saveFileName, teams]);
 
@@ -68,9 +119,15 @@ function QuizGame({
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
-            // Update loggedInTeams list only
             if (data.type === 'update') {
-                setLoggedInTeams(data.loggedInTeams);
+                if (data.answeredQuestions) {
+                    console.log('Ignoring backend updates during local restoration');
+                    return;
+                }
+
+                if (data.loggedInTeams) {
+                    setLoggedInTeams(data.loggedInTeams);
+                }
             }
         };
 
@@ -106,6 +163,35 @@ function QuizGame({
 
         return () => socket.close();
     }, []);
+
+    useEffect(() => {
+        if (!saveFileName) {
+            console.warn('Save file name is not defined. Skipping save.');
+            return;
+        }
+
+        const saveState = {
+            answeredQuestions,
+            teamData,
+        };
+
+        if (Object.keys(answeredQuestions).length === 0 && teamData.length === 0) {
+            console.warn('Skipping save of empty state.');
+            return;
+        }
+
+        try {
+            localStorage.setItem(saveFileName, JSON.stringify(saveState));
+            console.log('Saved game state:', saveState);
+        } catch (error) {
+            console.error('Failed to save game state:', error);
+        }
+    }, [answeredQuestions, teamData, saveFileName]);
+
+    useEffect(() => {
+        console.log('Setting answeredQuestions:', answeredQuestions);
+        console.log('Setting teamData:', teamData);
+    }, [answeredQuestions, teamData]);
 
     const openQuestion = (question) => {
         if (answeredQuestions[question.id]) return;
@@ -154,18 +240,16 @@ function QuizGame({
         closeModal();
     };
 
-    const updateGameState = ({questionId, teamColor, points}) => {
-        const updatedAnswers = {...answeredQuestions, [questionId]: teamColor};
+    const updateGameState = ({ questionId, teamColor, points }) => {
+        const updatedAnswers = { ...answeredQuestions, [questionId]: teamColor }; // Mark question as answered
         setAnsweredQuestions(updatedAnswers);
 
         if (points > 0) {
             const updatedTeams = teamData.map((team) =>
-                team.color === teamColor ? {...team, points: team.points + points} : team
+                team.color === teamColor ? { ...team, points: team.points + points } : team
             );
-            setTeamData(updatedTeams);
+            setTeamData(updatedTeams); // Update team points
         }
-
-        saveGameProgress(teamData, updatedAnswers);
     };
 
     const rotatePicker = () => {
@@ -303,7 +387,7 @@ function QuizGame({
                                 <div
                                     key={question.id}
                                     className={`quiz-box ${answeredQuestions[question.id] ? 'locked' : ''}`}
-                                    style={{backgroundColor: answeredQuestions[question.id] || '#4caf50'}}
+                                    style={{backgroundColor: answeredQuestions[question.id] ? '#ccc' : '#4caf50'}}
                                     onClick={() => openQuestion(question)}
                                 >
                                     <span>{question.id}.</span>
