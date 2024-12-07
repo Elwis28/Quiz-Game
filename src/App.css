@@ -49,13 +49,12 @@ body {
 }
 
 .question-grid {
-  display: flex; /* Stack rows vertically */
-  flex-direction: column; /* Themes in a vertical column */
-  gap: 20px; /* Space between theme rows */
-  width: 100%; /* Full width for the grid container */
-  max-width: 1200px; /* Constrain max width for readability */
-  margin: 0 auto; /* Center horizontally */
-  box-sizing: border-box; /* Include padding/border in width */
+  display: flex; /* Stack theme rows vertically */
+  flex-direction: column;
+  gap: 40px; /* Add spacing between theme rows */
+  width: 100%; /* Full-width layout */
+  max-width: 1200px; /* Optional: limit max width for better readability */
+  margin: 0 auto; /* Center the grid horizontally */
 }
 
 /* Container for the quiz boxes */
@@ -75,20 +74,21 @@ body {
 }
 
 .quiz-box {
-  background-color: #4caf50;
-  color: white;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.2em;
+  background-color: #4caf50; /* Green box background */
+  color: white; /* White text */
+  padding: 10px; /* Internal padding for content spacing */
+  display: flex; /* Flex for internal content alignment */
+  flex-direction: column; /* Vertical alignment for content */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text alignment */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 1rem; /* Base font size for readability */
 
-  height: 150px; /* Fixed height */
-  box-sizing: border-box; /* Include padding in size */
+  height: 150px; /* Fixed height for uniformity */
+  width: 100%; /* Ensure full width inside the grid column */
+  box-sizing: border-box; /* Include padding in size calculations */
 }
 
 .quiz-box:hover {
@@ -110,32 +110,22 @@ body {
 }
 
 /* Points Display in Quiz Box */
+.quiz-box span {
+  display: block; /* Stack vertically */
+  text-align: center; /* Center text */
+  margin: 5px 0; /* Space between spans */
+  color: white; /* Ensure contrast */
+}
+
 .question-points {
-  font-size: 0.8em;
-  color: #ffffffa0;
-  margin-top: 5px;
+  font-size: 0.9rem; /* Smaller font for points text */
+  color: #ffffff; /* Ensure readability on green background */
 }
 
 /* Separator */
 .separator {
   border-top: 1px solid #ccc;
   margin: 20px 0;
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
 }
 
 .modal-content {
@@ -397,44 +387,49 @@ body {
 }
 
 .theme-row {
-  display: grid; /* Use grid for the rows */
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
-  gap: 20px; /* Space between quiz boxes */
-  width: 100%; /* Ensure the row spans the full container width */
-  box-sizing: border-box; /* Include padding in size */
+  display: block; /* Allow proper stacking of rows */
+  margin-bottom: 40px; /* Add spacing between sections */
+}
+
+.question-grid {
+  display: block; /* Stack theme rows properly */
+  width: 100%; /* Ensure the grid spans full width */
+  max-width: 1200px; /* Optional: constrain for better readability */
+  margin: 0 auto; /* Center align the grid */
 }
 
 .questions-row {
-  display: flex;
-  flex-wrap: wrap; /* Ensures wrapping when boxes don't fit */
+  display: grid; /* Consistent grid layout */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
   gap: 15px; /* Space between boxes */
-  justify-content: flex-start; /* Aligns items to the left */
-  width: 100%; /* Ensure it spans the full width of the parent */
-  box-sizing: border-box; /* Include padding and border in size */
+  width: 100%; /* Ensure full-width utilization */
+  box-sizing: border-box; /* Include padding in size */
 }
 
 .questions-row > div {
-  flex: 1 1 calc(25% - 15px); /* Each box takes 25% of the row width, minus the gap */
-  max-width: calc(25% - 15px); /* Prevent the boxes from getting too big */
-  box-sizing: border-box;
-  aspect-ratio: 1 / 1; /* Keep the boxes square */
-  background-color: #b5d5ff; /* Example color */
-  text-align: center;
-  line-height: 100px; /* Adjust for centering text */
-  font-size: 16px;
+  width: 100%; /* Match the column width defined by grid */
+  height: 150px; /* Consistent height */
+  box-sizing: border-box; /* Include padding/border */
+  background-color: #4caf50; /* Green color for quiz box */
+  text-align: center; /* Center the text */
+  font-size: 1rem; /* Base font size for readability */
+  border-radius: 8px; /* Rounded corners */
+  display: flex; /* Flex layout for inner content alignment */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
 }
 
 .locked-label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-weight: bold;
-  font-size: 0.9em;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 2px 8px;
-  border-radius: 3px;
+  position: absolute; /* Overlay text on the box */
+  top: 50%; /* Vertically center */
+  left: 50%; /* Horizontally center */
+  transform: translate(-50%, -50%); /* Adjust for centering */
+  color: white; /* White text for contrast */
+  font-weight: bold; /* Bold text */
+  font-size: 0.9em; /* Smaller font size */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  padding: 2px 8px; /* Padding around text */
+  border-radius: 3px; /* Rounded edges */
 }
 
 .error-message {
