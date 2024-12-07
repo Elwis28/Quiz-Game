@@ -573,3 +573,81 @@ select {
   list-style: none;
   padding: 0;
 }
+
+/* Sidebar container */
+.sidebar {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 300px; /* Fixed width for sidebar */
+  height: calc(100vh - 20px); /* Full height minus padding */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  gap: 10px; /* Space between leaderboard and team list */
+  background-color: #f9f9f9; /* Background for sidebar */
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden; /* Prevent content overflow */
+  box-sizing: border-box;
+}
+
+/* Individual sections for leaderboard and team list */
+.sidebar-section {
+  flex: 1; /* Allow sections to grow equally */
+  overflow-y: auto; /* Enable scrolling for content overflow */
+  border: 1px solid #ddd; /* Optional: border for sections */
+  border-radius: 8px;
+  background-color: white; /* Section background */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Leaderboard styling */
+/* Leaderboard section - enhance visibility */
+.leaderboard-section h3 {
+  font-size: 1.5em; /* Increase the size of the title */
+  margin-bottom: 15px; /* Add spacing below the title */
+  text-align: center; /* Center-align the title */
+}
+
+.leaderboard-section ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0;
+  margin: 0;
+}
+
+.leaderboard-section li {
+  font-size: 1.2em; /* Increase font size for better readability */
+  margin-bottom: 10px; /* Add spacing between items */
+  display: flex; /* Align name and points on the same line */
+  justify-content: space-between; /* Distribute name and points evenly */
+  padding: 5px 10px; /* Add padding for spacing */
+  border-bottom: 1px solid #ddd; /* Optional: separate items visually */
+}
+
+.leaderboard-section li span {
+  font-weight: bold; /* Highlight important information */
+}
+
+/* Alternate row background for better readability */
+.leaderboard-section li:nth-child(odd) {
+  background-color: #f2f2f2; /* Light gray for odd rows */
+}
+
+.leaderboard-section li:nth-child(even) {
+  background-color: #ffffff; /* White for even rows */
+}
+
+.team-list-section button {
+  margin-left: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.team-list-section button:hover {
+  background-color: darkred;
+}

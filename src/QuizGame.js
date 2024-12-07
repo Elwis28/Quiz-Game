@@ -339,29 +339,23 @@ function QuizGame({
                 </div>
             )}
 
-            <button onClick={toggleLeaderboardVisibility} className="leaderboard-button">
-                {isLeaderboardVisible ? 'Hide Leaderboard' : 'Show Leaderboard'}
-            </button>
-
-            {isLeaderboardVisible && (
-                <div className="leaderboard">
+            <div className="sidebar">
+                {/* Leaderboard Section */}
+                <div className="sidebar-section leaderboard-section">
                     <h3>Leaderboard</h3>
                     <ul>
                         {sortedTeams.map((team, index) => (
                             <li key={team.name}>
-                                {index + 1}. {team.name}: {team.points} points
+                                <span>{index + 1}. {team.name}</span>
+                                <span>{team.points} points</span>
                             </li>
                         ))}
                     </ul>
                 </div>
-            )}
 
-            <button onClick={toggleTeamListVisibility} className="team-list-button">
-                {isTeamListVisible ? 'Hide Team List' : 'Show Team List'}
-            </button>
-
-            {isTeamListVisible && (
-                <div className="team-list-dropdown">
+                {/* Team List Section */}
+                <div className="sidebar-section team-list-section">
+                    <h3>Team List</h3>
                     <ul>
                         {teams.map((team) => (
                             <li
@@ -373,19 +367,7 @@ function QuizGame({
                                 }}
                             >
                                 {team.name}
-                                <button
-                                    onClick={() => handleKickTeam(team.name)}
-                                    style={{
-                                        marginLeft: '10px',
-                                        color: 'white',
-                                        backgroundColor: 'red',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    ✕
-                                </button>
+                                <button onClick={() => handleKickTeam(team.name)}>✕</button>
                             </li>
                         ))}
                     </ul>
@@ -404,7 +386,7 @@ function QuizGame({
                         Kick All Teams
                     </button>
                 </div>
-            )}
+            </div>
 
             <div className="question-grid">
                 {quizData.map((theme, themeIndex) => (
