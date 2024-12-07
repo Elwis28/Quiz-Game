@@ -117,6 +117,11 @@ router.post('/reset-button-presses', (req, res) => {
 router.post('/record-button-click', (req, res) => {
     const { teamName } = req.body;
 
+    // Validate teamName
+    if (!teamName || !gameState.teams.some((team) => team.name === teamName)) {
+        return res.status(400).json({ message: 'Invalid or missing teamName' });
+    }
+
     // Ensure the team hasn't clicked already
     if (buttonPresses.find((entry) => entry.teamName === teamName)) {
         return res.status(400).json({ message: 'Button already clicked by this team' });

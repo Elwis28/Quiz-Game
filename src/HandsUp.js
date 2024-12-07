@@ -77,6 +77,11 @@ function HandsUp({isGameStarted}) {
     const handleButtonClick = async () => {
         if (!isQuestionActive || isButtonClicked) return;
 
+        if (!teamName) {
+            console.error('Team name is missing!');
+            return;
+        }
+
         setIsButtonClicked(true);
 
         try {
@@ -84,7 +89,9 @@ function HandsUp({isGameStarted}) {
                 teamName,
             });
         } catch (error) {
-            console.error('Error recording button click:', error.message);
+            setIsButtonClicked(false); // Allow retry if an error occurs
+            console.error('Error recording button click:', error.response?.data?.message || error.message);
+            alert('Failed to record button click. Please try again.');
         }
     };
 
