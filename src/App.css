@@ -525,34 +525,89 @@ select {
   padding: 0;
 }
 
-/* Sidebar container */
+/* Sidebar */
 .sidebar {
   position: fixed;
-  top: 10px;
-  left: 10px;
-  width: 300px; /* Fixed width for sidebar */
-  height: calc(100vh - 20px); /* Full height minus padding */
-  display: flex;
-  flex-direction: column; /* Stack children vertically */
-  gap: 10px; /* Space between leaderboard and team list */
-  background-color: #f9f9f9; /* Background for sidebar */
-  padding: 10px;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  overflow: hidden; /* Prevent content overflow */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  transition: width 0.3s ease;
+  width: 300px;
+  z-index: 1000; /* Ensures it appears above other content */
+}
+
+.sidebar.collapsed {
+  width: 10px;
+  overflow: hidden;
+}
+
+.sidebar .toggle-button {
+  position: fixed; /* Fixed position to keep it outside the sidebar */
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1100; /* Higher z-index to stay above the sidebar */
+  transition: transform 0.3s ease, left 0.3s ease; /* Smooth movement */
+}
+
+.sidebar.collapsed .toggle-button {
+  transform: translateX(0); /* Adjust position when collapsed */
+}
+
+.sidebar .toggle-button:hover {
+  background-color: #1769aa;
+}
+
+.sidebar-section {
+  flex: 1;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
-/* Individual sections for leaderboard and team list */
-.sidebar-section {
-  flex: 1; /* Allow sections to grow equally */
-  overflow-y: auto; /* Enable scrolling for content overflow */
-  border: 1px solid #ddd; /* Optional: border for sections */
-  border-radius: 8px;
-  background-color: white; /* Section background */
-  padding: 10px;
-  box-sizing: border-box;
+.sidebar-section h3 {
+  margin: 0 0 10px 0;
+  text-align: center;
 }
+
+.sidebar-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-section li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 320px; /* Sidebar width */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.expanded {
+  margin-left: 70px;
+}
+
 
 /* Leaderboard styling */
 /* Leaderboard section - enhance visibility */

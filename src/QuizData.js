@@ -16,7 +16,7 @@ const quizData = [
             { id: 7, type: 'text', content: 'Melyik városban gyilkolták meg Julius Caesart?', points: 1 }, // Róma
             { id: 8, type: 'image', content: 'https://example.com/julius-caesar.jpg', points: 2 }, // Kép Caesar szobráról
             { id: 9, type: 'text', content: 'Melyik évben esett le a berlini fal?', points: 3 }, // 1989
-            { id: 10, type: 'image', content: 'https://example.com/berlin-wall.jpg', points: 4 }, // Kép a berlini fal leomlásáról
+            { id: 10, type: 'image', content: 'https://example.com/berlin-wall.jpg', points: 4 }, // Berlini fal képe
             { id: 11, type: 'video', content: 'https://example.com/moon-landing.mp4', points: 5 }, // Holdraszállás videó, válasz: "1969"
             { id: 12, type: 'text', content: 'Hogyan nevezték az első világháborúban használt harci gázt?', points: 6 } // Mustár
         ]
@@ -36,9 +36,9 @@ const quizData = [
         title: "Antavo kérdések",
         questions: [
             { id: 19, type: 'text', content: 'Mi az Antavo székhelyének országa?', points: 1 }, // Magyarország
-            { id: 20, type: 'image', content: 'https://example.com/antavo-logo.png', points: 2 }, // Antavo logó
+            { id: 20, type: 'text', content: 'Milyen iparágnak kínál megoldásokat az Antavo?', points: 2 }, // Retail
             { id: 21, type: 'text', content: 'Melyik évben alapították az Antavót?', points: 3 }, // 2011
-            { id: 22, type: 'image', content: 'https://example.com/antavo-dashboard.jpg', points: 4 }, // Antavo platform képernyőkép
+            { id: 22, type: 'text', content: 'Mi az Antavo fő szolgáltatása? (angolul)', points: 4 }, // Loyalty
             { id: 23, type: 'text', content: 'Milyen funkciók érhetők el az Antavo platformján?', points: 5 }, // Loyalty management
             { id: 24, type: 'text', content: 'Hány éves az Antavo 2024-ben, ha 2011-ben alapították?', points: 6 } // 13
         ]
@@ -47,22 +47,22 @@ const quizData = [
         title: "Geek",
         questions: [
             { id: 25, type: 'text', content: 'Mi az eredeti nyelve a "The Lord of the Rings"-nek?', points: 1 }, // Angol
-            { id: 26, type: 'image', content: 'https://example.com/hyrule-map.jpg', points: 2 }, // Hyrule térkép a Zeldából
+            { id: 26, type: 'text', content: 'Melyik videojátékban található Hyrule?', points: 2 }, // Zelda
             { id: 27, type: 'text', content: 'Melyik sorozatban szerepel "Spock"?', points: 3 }, // Star Trek
-            { id: 28, type: 'image', content: 'https://example.com/ironman-armor.jpg', points: 4 }, // Iron Man páncél
+            { id: 28, type: 'text', content: 'Mi a teljes neve Tony Starknak?', points: 4 }, // Anthony Stark
             { id: 29, type: 'text', content: 'Melyik sci-fi filmben található az "Alien" idegen?', points: 5 }, // Alien
-            { id: 30, type: 'video', content: 'https://example.com/lego-scene.mp4', points: 6 } // Lego jelenet
+            { id: 30, type: 'text', content: 'Mi a neve a kocka alakú építőjáték-sorozatnak?', points: 6 } // Lego
         ]
     },
     {
         title: "Random",
         questions: [
             { id: 31, type: 'text', content: 'Hány órából áll egy nap?', points: 1 }, // 24
-            { id: 32, type: 'image', content: 'https://example.com/rainbow.jpg', points: 2 }, // Szivárvány képe
+            { id: 32, type: 'text', content: 'Mi az a szám, ami osztható 3-mal és 5-tel is 15 alatt?', points: 2 }, // 15
             { id: 33, type: 'text', content: 'Melyik állat a világ legnagyobb emlőse?', points: 3 }, // Bálna
-            { id: 34, type: 'image', content: 'https://example.com/prime-number.jpg', points: 4 }, // Prímszámokat tartalmazó kép
+            { id: 34, type: 'text', content: 'Melyik szám a prímszám? (17, 18, 19)', points: 4 }, // 17
             { id: 35, type: 'text', content: 'Mi az idő mértékegysége?', points: 5 }, // Másodperc
-            { id: 36, type: 'video', content: 'https://example.com/riddle-video.mp4', points: 6 } // Fejtörő videó
+            { id: 36, type: 'text', content: 'Ha két alma háromszor annyi, mint 6, akkor hány alma van?', points: 6 } // 9
         ]
     }
 ];

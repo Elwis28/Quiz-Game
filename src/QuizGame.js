@@ -16,14 +16,14 @@ function QuizGame({
     const [modalContent, setModalContent] = useState(null);
     const [answeredQuestions, setAnsweredQuestions] = useState({});
     const [teamData, setTeamData] = useState([]);
-    const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
-    const [isTeamListVisible, setIsTeamListVisible] = useState(false);
     const [timeLeft, setTimeLeft] = useState(60);
     const [currentPicker, setCurrentPicker] = useState(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
     const [loggedInTeams, setLoggedInTeams] = useState(initialLoggedInTeams || []);
     const [buttonPressList, setButtonPressList] = useState([]);
     const [currentPickerIndex, setCurrentPickerIndex] = useState(0); // Default to the first team
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
 
     const WS_URL =
         process.env.NODE_ENV === 'development'
@@ -295,12 +295,8 @@ function QuizGame({
         }
     };
 
-    const toggleLeaderboardVisibility = () => {
-        setIsLeaderboardVisible((prev) => !prev);
-    };
-
-    const toggleTeamListVisibility = () => {
-        setIsTeamListVisible((prev) => !prev);
+    const toggleSidebar = () => {
+        setIsCollapsed((prev) => !prev);
     };
 
     const handleKickTeam = async (teamName) => {
@@ -339,54 +335,61 @@ function QuizGame({
                 </div>
             )}
 
-            <div className="sidebar">
-                {/* Leaderboard Section */}
-                <div className="sidebar-section leaderboard-section">
-                    <h3>Leaderboard</h3>
-                    <ul>
-                        {sortedTeams.map((team, index) => (
-                            <li key={team.name}>
-                                <span>{index + 1}. {team.name}</span>
-                                <span>{team.points} points</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+            <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+                <button className="toggle-button" onClick={toggleSidebar}>
+                    {isCollapsed ? ">" : "<"}
+                </button>
+                {!isCollapsed && (
+                    <>
+                        <div className="sidebar-section leaderboard-section">
+                            <h3>Leaderboard</h3>
+                            <ul>
+                                {sortedTeams.map((team, index) => (
+                                    <li key={team.name}>
+                                        <span>{index + 1}. {team.name}</span>
+                                        <span>{team.points} points</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </>
+                )}
 
-                {/* Team List Section */}
-                <div className="sidebar-section team-list-section">
-                    <h3>Team List</h3>
-                    <ul>
-                        {teams.map((team) => (
-                            <li
-                                key={team.name}
-                                style={{
-                                    color: Array.isArray(loggedInTeams) && loggedInTeams.includes(team.name)
-                                        ? 'green'
-                                        : 'red',
-                                }}
-                            >
-                                {team.name}
-                                <button onClick={() => handleKickTeam(team.name)}>✕</button>
-                            </li>
-                        ))}
-                    </ul>
-                    <button
-                        onClick={handleKickAllTeams}
-                        style={{
-                            marginTop: '10px',
-                            backgroundColor: 'red',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            padding: '10px',
-                        }}
-                    >
-                        Kick All Teams
-                    </button>
-                </div>
+            {/* Team List Section */}
+            <div className="sidebar-section team-list-section">
+                <h3>Team List</h3>
+                <ul>
+                    {teams.map((team) => (
+                        <li
+                            key={team.name}
+                            style={{
+                                color: Array.isArray(loggedInTeams) && loggedInTeams.includes(team.name)
+                                    ? 'green'
+                                    : 'red',
+                            }}
+                        >
+                            {team.name}
+                            <button onClick={() => handleKickTeam(team.name)}>✕</button>
+                        </li>
+                    ))}
+                </ul>
+                <button
+                    onClick={handleKickAllTeams}
+                    style={{
+                        marginTop: '10px',
+                        backgroundColor: 'red',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        padding: '10px',
+                    }}
+                >
+                    Kick All Teams
+                </button>
             </div>
+            </div>
+
 
             <div className="question-grid">
                 {quizData.map((theme, themeIndex) => (
@@ -414,7 +417,7 @@ function QuizGame({
             {modalContent && (
                 <Modal onClose={closeModal}>
                     <div className="modal-content">
-                        {/* Top Section */}
+                    {/* Top Section */}
                         <div className="modal-top">
                             <div className="modal-timer">
                                 {timeLeft > 0 ? `Time Left: ${timeLeft}s` : "Time's up!"}
