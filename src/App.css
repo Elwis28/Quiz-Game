@@ -128,36 +128,6 @@ body {
   margin: 20px 0;
 }
 
-.modal-content {
-  position: relative;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80vw;
-  height: 80vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 1.8em;
-}
-
-/* Modal Timer */
-.modal-timer {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 16px;
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #333;
-}
-
 /* Close Button */
 .close-button {
   position: absolute;
@@ -183,25 +153,6 @@ body {
   }
   to {
     opacity: 1;
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .modal-content {
-    width: 90vw;
-    height: 90vh;
-    padding: 15px;
-    font-size: 1.5em;
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-content {
-    width: 95vw;
-    height: 95vh;
-    padding: 10px;
-    font-size: 1.3em;
   }
 }
 

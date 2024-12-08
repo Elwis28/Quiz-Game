@@ -10,8 +10,129 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    opacity: 0;
     animation: fadeIn 0.3s forwards;
+}
+
+/* Modal Content */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 90vw;
+    height: 90vh;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Modal Top */
+.modal-top {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Modal Bottom */
+.modal-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+/* Modal Buttons */
+.modal-bottom button {
+    background-color: #8a2be2;
+    color: white;
+}
+
+.modal-bottom button:hover {
+    background-color: #6a1dbf;
+}
+
+/* Animation for smooth opening */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-question {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em; /* Increase font size of question text */
+    padding: 0 20px; /* Padding for better readability */
+}
+
+.modal-timer {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    font-size: 2.50em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Modal top section (Timer/Question) */
+.modal-top {
+    flex: 1; /* Take available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Modal bottom section (Team buttons) */
+.modal-team-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align */
+    justify-content: flex-start; /* Align items in the section */
+    gap: 10px;
+    margin-top: auto; /* Push the section to the bottom */
+    padding-top: 10px;
+    border-top: 1px solid #ddd; /* Optional separator */
+}
+
+.button-press-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    justify-content: center; /* Center-align buttons */
+    gap: 10px; /* Add spacing between buttons */
+}
+
+/* Adjust individual button styling */
+.modal-team-buttons button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #8a2be2;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.modal-team-buttons button:hover {
+    transform: scale(1.1);
+    background-color: #6a1dbf;
 }
 
 .modal-close-button {
@@ -30,45 +151,6 @@
 
 .modal-close-button:hover {
     background-color: darkred;
-}
-
-/* Animation for smooth opening */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.modal-question {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8em; /* Increase font size of question text */
-    padding: 0 20px; /* Padding for better readability */
-}
-
-/* Team Buttons Container */
-.modal-team-buttons {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px 0; /* Space at bottom */
-}
-
-/* Individual Team Button */
-.modal-team-buttons button {
-    padding: 15px 25px; /* Larger button size */
-    font-size: 1em; /* Adjust font size */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.modal-team-buttons button:hover {
-    transform: scale(1.1); /* Slight scale effect on hover */
 }
 
 /* Animations */
@@ -99,6 +181,9 @@
     }
 }
 
-
-
-
+.modal-content img, .modal-content video {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+}

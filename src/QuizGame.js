@@ -400,7 +400,6 @@ function QuizGame({
                                     style={{backgroundColor: answeredQuestions[question.id] ? '#ccc' : '#4caf50'}}
                                     onClick={() => openQuestion(question)}
                                 >
-                                    <span>{question.id}.</span>
                                     <span className="question-points">{question.points} points</span>
                                     {answeredQuestions[question.id] && (
                                         <span className="locked-label">Locked</span>
@@ -414,59 +413,91 @@ function QuizGame({
 
             {modalContent && (
                 <Modal onClose={closeModal}>
-                    <div>
-                        <div className="modal-timer">
-                            {timeLeft > 0 ? `Time Left: ${timeLeft}s` : "Time's up!"}
+                    <div className="modal-content">
+                        {/* Top Section */}
+                        <div className="modal-top">
+                            <div className="modal-timer">
+                                {timeLeft > 0 ? `Time Left: ${timeLeft}s` : "Time's up!"}
+                            </div>
+                            {modalContent.type === "text" && <h3>{modalContent.content}</h3>}
+                            {modalContent.type === "image" && (
+                                <img
+                                    src={modalContent.content}
+                                    alt="Quiz Visual"
+                                    style={{
+                                        maxWidth: "100%",
+                                        maxHeight: "300px",
+                                        margin: "0 auto",
+                                        display: "block",
+                                    }}
+                                />
+                            )}
+                            {modalContent.type === "video" && (
+                                <video
+                                    src={modalContent.content}
+                                    controls
+                                    style={{
+                                        maxWidth: "100%",
+                                        maxHeight: "300px",
+                                        margin: "0 auto",
+                                        display: "block",
+                                    }}
+                                >
+                                    Your browser does not support the video tag.
+                                </video>
+                            )}
                         </div>
-                        <h3>{modalContent.content}</h3>
-                        <p>Points: {modalContent.points}</p>
-                    </div>
-                    {/* Display the list of button presses */}
-                    <div className="button-press-list">
-                        <h4>Teams Who raised hands:</h4>
-                        <ul>
-                            {buttonPressList.map((entry, index) => (
-                                <li key={index}>
-                                    {index + 1}. {entry.teamName}
-                                </li>
+
+                        {/* Button Press List */}
+                        <div className="button-press-list">
+                            <h4>Teams Who raised hands:</h4>
+                            <ul>
+                                {buttonPressList.map((entry, index) => (
+                                    <li key={index}>
+                                        {index + 1}. {entry.teamName}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Team Buttons */}
+                        <div className="team-buttons">
+                            {teamData.map((team) => (
+                                <button
+                                    key={team.name}
+                                    onClick={() => handleTeamWin(team)}
+                                    style={{
+                                        backgroundColor: team.color,
+                                        padding: "10px",
+                                        margin: "5px",
+                                        border: "none",
+                                        borderRadius: "5px",
+                                        color: "white",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {team.name}
+                                </button>
                             ))}
-                        </ul>
-                    </div>
-                    <div className="team-buttons">
-                        {teamData.map((team) => (
                             <button
-                                key={team.name}
-                                onClick={() => handleTeamWin(team)}
+                                onClick={handleNoWinner}
                                 style={{
-                                    backgroundColor: team.color,
-                                    padding: '10px',
-                                    margin: '5px',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    color: 'white',
-                                    cursor: 'pointer',
+                                    backgroundColor: "black",
+                                    padding: "10px",
+                                    margin: "5px",
+                                    border: "none",
+                                    borderRadius: "5px",
+                                    color: "white",
+                                    cursor: "pointer",
                                 }}
                             >
-                                {team.name}
+                                None
                             </button>
-                        ))}
-                        <button
-                            onClick={handleNoWinner}
-                            style={{
-                                backgroundColor: 'black',
-                                padding: '10px',
-                                margin: '5px',
-                                border: 'none',
-                                borderRadius: '5px',
-                                color: 'white',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            None
-                        </button>
+                        </div>
                     </div>
                 </Modal>
             )}
+
 
             {isGameComplete && (
                 <Modal onClose={() => setIsGameComplete(false)}>
