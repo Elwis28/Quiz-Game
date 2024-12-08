@@ -422,14 +422,16 @@ function QuizGame({
                             <div className="modal-timer">
                                 {timeLeft > 0 ? `Time Left: ${timeLeft}s` : "Time's up!"}
                             </div>
-                            {modalContent.type === "text" && <h3>{modalContent.content}</h3>}
+                            {modalContent.type === "text" && (
+                                <h3 style={{ fontSize: "4.5em" }}>{modalContent.content}</h3>
+                            )}
                             {modalContent.type === "image" && (
                                 <img
                                     src={modalContent.content}
                                     alt="Quiz Visual"
                                     style={{
                                         maxWidth: "100%",
-                                        maxHeight: "300px",
+                                        maxHeight: "50vh",
                                         margin: "0 auto",
                                         display: "block",
                                     }}
@@ -448,6 +450,12 @@ function QuizGame({
                                 >
                                     Your browser does not support the video tag.
                                 </video>
+                            )}
+                            {modalContent.type === "audio" && (
+                                <audio src={modalContent.content}
+                                       controls>
+                                    Your browser does not support the audio tag.
+                                </audio>
                             )}
                         </div>
 

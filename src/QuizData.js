@@ -2,75 +2,69 @@ const quizData = [
     {
         title: "IT",
         questions: [
-            { id: 1, type: 'image', content: 'media/images/java.png', points: 1 }, // Könnyű
-            { id: 2, type: 'image', content: 'https://example.com/byte-image.png', points: 2 }, // Egy kép egy bináris számról, válasz: "Byte"
-            { id: 3, type: 'text', content: 'Mi az SQL teljes jelentése?', points: 3 }, // Structured Query Language
-            { id: 4, type: 'image', content: 'https://example.com/java-logo.png', points: 4 }, // Kávéscsésze a Java logójából
-            { id: 5, type: 'video', content: 'https://example.com/python-intro.mp4', points: 5 }, // Python programozás videó, válasz: "Python"
-            { id: 6, type: 'text', content: 'Melyik programozási nyelv használt először osztályokat?', points: 6 } // Smalltalk
+            { id: 1, type: 'text', content: 'Mi a számítógépek alapértelmezett kettős számrendszerének neve?', points: 1 }, // Bináris
+            { id: 2, type: 'image', content: 'media/images/java.png', points: 2 }, //Java
+            { id: 3, type: 'text', content: 'Mit rövidit az SQL?', points: 3 }, //Structured Query Language
+            { id: 4, type: 'text', content: 'Mi a neve az első teljesen programozható számítógépnek?', points: 4 }, //Eniac
+            { id: 5, type: 'text', content: 'Mi a Turing-teszt célja?', points: 5 }, //A vizsgálat annak eldöntésére szolgál, hogy egy számítógép intelligens-e
+            { id: 6, type: 'text', content: 'Melyik programozási nyelv használt először osztályokat?', points: 6 } // Simula
         ]
     },
     {
         title: "Történelem",
         questions: [
             { id: 7, type: 'text', content: 'Melyik városban gyilkolták meg Julius Caesart?', points: 1 }, // Róma
-            { id: 8, type: 'image', content: 'https://example.com/julius-caesar.jpg', points: 2 }, // Kép Caesar szobráról
-            { id: 9, type: 'text', content: 'Melyik évben esett le a berlini fal?', points: 3 }, // 1989
-            { id: 10, type: 'image', content: 'https://example.com/berlin-wall.jpg', points: 4 }, // Berlini fal képe
-            { id: 11, type: 'video', content: 'https://example.com/moon-landing.mp4', points: 5 }, // Holdraszállás videó, válasz: "1969"
-            { id: 12, type: 'text', content: 'Hogyan nevezték az első világháborúban használt harci gázt?', points: 6 } // Mustár
+            { id: 8, type: 'text', content: 'Melyik ország indította az első műholdat az űrbe?', points: 2 }, // Szovjetunió
+            { id: 9, type: 'text', content: 'Mi volt a neve az első sikeres föld körüli hajózás vezetőjének?', points: 3 }, // Magellán
+            { id: 10, type: 'text', content: 'Melyik országban találták fel az iránytűt?', points: 4 }, // Kína
+            { id: 11, type: 'image', content: 'media/images/Nixon.jpg', points: 5 }, // Nixon
+            { id: 12, type: 'text', content: 'Ki volt a „Vaskancellár” becenévvel illetett német politikus?', points: 6 } // Otto von Bismarck
         ]
     },
     {
         title: "Filmek/sorozatok",
         questions: [
-            { id: 13, type: 'text', content: 'Melyik országban játszódik a Harry Potter történet?', points: 1 }, // Anglia
-            { id: 14, type: 'image', content: 'https://example.com/hogwarts.jpg', points: 2 }, // Roxfort képe
-            { id: 15, type: 'text', content: 'Hány évad készült a Breaking Bad sorozatból?', points: 3 }, // 5
-            { id: 16, type: 'video', content: 'https://example.com/delorean-scene.mp4', points: 4 }, // Delorean autó jelenet, válasz: "Vissza a jövőbe"
-            { id: 17, type: 'text', content: 'Melyik színész játssza James Bondot a "Casino Royale" filmben?', points: 5 }, // Daniel Craig
-            { id: 18, type: 'image', content: 'https://example.com/westeros-map.jpg', points: 6 } // Westeros térképe
+            { id: 13, type: 'text', content: 'Mi a neve a Stranger Things városának, ahol az események játszódnak?', points: 1 }, // Hawkins
+            { id: 14, type: 'text', content: 'Hány gyűrűt kovácsoltak összesen a Gyűrűk Ura történetében?', points: 2 }, // 20
+            { id: 15, type: 'text', content: 'Mi a neve a Quentin Tarantino által rendezett első filmnek?', points: 3 }, // Kutyaszorítóban
+            { id: 16, type: 'audio', content: 'media/audio/Omar Little Whistle.mp3', points: 4 }, // Drót(Wire) - Omar Whistle
+            { id: 17, type: 'text', content: 'Mi a neve a 2001: Űrodüsszeia című film mesterséges intelligenciájának?', points: 5 }, // HAL 9000
+            { id: 18, type: 'text', content: 'Melyik anime film nyerte el elöször az Oscar-díjat a legjobb animációs film kategóriában?', points: 6 } // Spirited away - Chihiro szellemországban
         ]
     },
     {
         title: "Antavo kérdések",
         questions: [
-            { id: 19, type: 'text', content: 'Mi az Antavo székhelyének országa?', points: 1 }, // Magyarország
-            { id: 20, type: 'text', content: 'Milyen iparágnak kínál megoldásokat az Antavo?', points: 2 }, // Retail
-            { id: 21, type: 'text', content: 'Melyik évben alapították az Antavót?', points: 3 }, // 2011
-            { id: 22, type: 'text', content: 'Mi az Antavo fő szolgáltatása? (angolul)', points: 4 }, // Loyalty
-            { id: 23, type: 'text', content: 'Milyen funkciók érhetők el az Antavo platformján?', points: 5 }, // Loyalty management
-            { id: 24, type: 'text', content: 'Hány éves az Antavo 2024-ben, ha 2011-ben alapították?', points: 6 } // 13
+            { id: 19, type: 'text', content: 'A challenges module-t hogy hívták eredetileg?', points: 1 }, // Activities
+            { id: 20, type: 'text', content: 'Hány Expiration type van a Tiers module-ban és mi a nevük?', points: 2 }, // 3 (Point based, spend based, invitation only)
+            { id: 21, type: 'text', content: 'Mi a modul neve amivel pontot lehet adni ha valaki megnéz egy videót?', points: 3 }, // Content consumption
+            { id: 22, type: 'text', content: 'Mikor forgatott a köztévé az Antavonál az év irodája kapcsán?', points: 4 }, // 2019
+            { id: 23, type: 'text', content: 'Mi volt az eszköz neve amivel be akartunk törni a loyalty hardver piacra?', points: 5 }, // Kiosk
+            { id: 24, type: 'image', content: 'media/images/auth0-icon.svg', points: 6 } // Auth0
         ]
     },
     {
         title: "Geek",
         questions: [
-            { id: 25, type: 'text', content: 'Mi az eredeti nyelve a "The Lord of the Rings"-nek?', points: 1 }, // Angol
-            { id: 26, type: 'text', content: 'Melyik videojátékban található Hyrule?', points: 2 }, // Zelda
-            { id: 27, type: 'text', content: 'Melyik sorozatban szerepel "Spock"?', points: 3 }, // Star Trek
-            { id: 28, type: 'text', content: 'Mi a teljes neve Tony Starknak?', points: 4 }, // Anthony Stark
-            { id: 29, type: 'text', content: 'Melyik sci-fi filmben található az "Alien" idegen?', points: 5 }, // Alien
-            { id: 30, type: 'text', content: 'Mi a neve a kocka alakú építőjáték-sorozatnak?', points: 6 } // Lego
+            { id: 25, type: 'text', content: 'Ki az end boss az eredeti Super Marioban?', points: 1 }, // Bowser
+            { id: 26, type: 'text', content: 'Melyik híres anime főszereplője Monkey D. Luffy?', points: 2 }, // One Piece
+            { id: 27, type: 'text', content: 'Mi a neve az hajónak az eredeti Mass Effect játékokban?', points: 3 }, // Normandy
+            { id: 28, type: 'text', content: 'Mi a neve a varázslatnak amivel reptetni lehet a tárgyakat a Harry Potter világában?', points: 4 }, // Wingardium Leviosa
+            { id: 29, type: 'text', content: 'Mi a neve a Fallout videojátékok posztapokaliptikus menedékeinek?', points: 5 }, // Vault
+            { id: 30, type: 'text', content: 'Mi a neve a világ első e-sport eseményén 1972-ben játszott játéknak?', points: 6 } // Spacewar!
         ]
     },
     {
         title: "Random",
         questions: [
-            { id: 31, type: 'text', content: 'Hány órából áll egy nap?', points: 1 }, // 24
-            { id: 32, type: 'text', content: 'Mi az a szám, ami osztható 3-mal és 5-tel is 15 alatt?', points: 2 }, // 15
-            { id: 33, type: 'text', content: 'Melyik állat a világ legnagyobb emlőse?', points: 3 }, // Bálna
-            { id: 34, type: 'text', content: 'Melyik szám a prímszám? (17, 18, 19)', points: 4 }, // 17
-            { id: 35, type: 'text', content: 'Mi az idő mértékegysége?', points: 5 }, // Másodperc
-            { id: 36, type: 'text', content: 'Ha két alma háromszor annyi, mint 6, akkor hány alma van?', points: 6 } // 9
+            { id: 31, type: 'text', content: 'Hány percböl áll egy nap?', points: 1 }, // 1440
+            { id: 32, type: 'text', content: 'Melyik szám a prímszám? (199, 201, 207)', points: 2 }, // 199
+            { id: 33, type: 'text', content: 'Egy dobozban van 10 piros és 10 kék golyó. Hány golyót kell kivenni biztosan, hogy legalább két azonos színű golyó legyen nálad?', points: 3 }, // 3 a harmadik golyó biztosan azonos színű lesz valamelyikkel
+            { id: 34, type: 'text', content: 'Két apa és két fia összesen három almát oszt el egymás között, és mindegyikük kap egyet. Hogyan lehetséges ez?', points: 4 }, // Nagyapa, apa, fiú (három generáció).
+            { id: 35, type: 'text', content: 'Egy szobában négy sarok van. Minden sarokban egy macska ül, és minden macska előtt három macska ül. Hány macska van a szobában?', points: 5 }, // Négy (mindegyik macska látja a többit).
+            { id: 36, type: 'text', content: 'Melyik állat ugrik magasabbra egy háznál?', points: 6 } // Mindegyik mert a ház nem ugrik
         ]
     }
 ];
 
 export default quizData;
-
-
-
-
-
-
