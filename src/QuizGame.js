@@ -319,6 +319,16 @@ function QuizGame({
         }
     };
 
+    const updateTeamPoints = (teamName, adjustment) => {
+        setTeamData((prevTeamData) =>
+            prevTeamData.map((team) =>
+                team.name === teamName
+                    ? { ...team, points: Math.max(team.points + adjustment, 0) }
+                    : team
+            )
+        );
+    };
+
     const sortedTeams = [...teamData].sort((a, b) => b.points - a.points);
 
     return (
@@ -348,6 +358,18 @@ function QuizGame({
                                     <li key={team.name}>
                                         <span>{index + 1}. {team.name}</span>
                                         <span>{team.points} points</span>
+                                        <button
+                                            className="adjust-button"
+                                            onClick={() => updateTeamPoints(team.name, 1)}
+                                        >
+                                            +
+                                        </button>
+                                        <button
+                                            className="adjust-button"
+                                            onClick={() => updateTeamPoints(team.name, -1)}
+                                        >
+                                            -
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
@@ -355,13 +377,13 @@ function QuizGame({
                     </>
                 )}
 
-            {/* Team List Section */}
-            <div className="sidebar-section team-list-section">
-                <h3>Team List</h3>
-                <ul>
-                    {teams.map((team) => (
-                        <li
-                            key={team.name}
+                {/* Team List Section */}
+                <div className="sidebar-section team-list-section">
+                    <h3>Team List</h3>
+                    <ul>
+                        {teams.map((team) => (
+                            <li
+                                key={team.name}
                             style={{
                                 color: Array.isArray(loggedInTeams) && loggedInTeams.includes(team.name)
                                     ? 'green'

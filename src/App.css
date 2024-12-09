@@ -644,6 +644,26 @@ select {
   background-color: #ffffff; /* White for even rows */
 }
 
+/* Adjust buttons for leaderboard */
+.adjust-button {
+  margin-left: 5px;
+  padding: 5px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.adjust-button:hover {
+  background-color: #45a049;
+}
+
+.adjust-button:active {
+  background-color: #3e8e41;
+}
+
 .team-list-section button {
   margin-left: 10px;
   background-color: red;

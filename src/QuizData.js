@@ -33,12 +33,12 @@ const quizData = [
         ]
     },
     {
-        title: "Antavo kérdések",
+        title: "Antavo",
         questions: [
             { id: 19, type: 'text', content: 'A challenges module-t hogy hívták eredetileg?', points: 1 }, // Activities
             { id: 20, type: 'text', content: 'Hány Expiration type van a Tiers module-ban és mi a nevük?', points: 2 }, // 3 (Point based, spend based, invitation only)
             { id: 21, type: 'text', content: 'Mi a modul neve amivel pontot lehet adni ha valaki megnéz egy videót?', points: 3 }, // Content consumption
-            { id: 22, type: 'text', content: 'Mikor forgatott a köztévé az Antavonál az év irodája kapcsán?', points: 4 }, // 2019
+            { id: 22, type: 'text', content: 'Mikor lett az Antavo az év irodája?', points: 4 }, // 2018
             { id: 23, type: 'text', content: 'Mi volt az eszköz neve amivel be akartunk törni a loyalty hardver piacra?', points: 5 }, // Kiosk
             { id: 24, type: 'image', content: 'media/images/auth0-icon.svg', points: 6 } // Auth0
         ]
@@ -51,7 +51,7 @@ const quizData = [
             { id: 27, type: 'text', content: 'Mi a neve az hajónak az eredeti Mass Effect játékokban?', points: 3 }, // Normandy
             { id: 28, type: 'text', content: 'Mi a neve a varázslatnak amivel reptetni lehet a tárgyakat a Harry Potter világában?', points: 4 }, // Wingardium Leviosa
             { id: 29, type: 'text', content: 'Mi a neve a Fallout videojátékok posztapokaliptikus menedékeinek?', points: 5 }, // Vault
-            { id: 30, type: 'text', content: 'Mi a neve a világ első e-sport eseményén 1972-ben játszott játéknak?', points: 6 } // Spacewar!
+            { id: 30, type: 'text', content: 'Mi a neve a világ első e-sport eseményén, 1972-ben játszott játéknak?', points: 6 } // Spacewar!
         ]
     },
     {
@@ -63,6 +63,17 @@ const quizData = [
             { id: 34, type: 'text', content: 'Két apa és két fia összesen három almát oszt el egymás között, és mindegyikük kap egyet. Hogyan lehetséges ez?', points: 4 }, // Nagyapa, apa, fiú (három generáció).
             { id: 35, type: 'text', content: 'Egy szobában négy sarok van. Minden sarokban egy macska ül, és minden macska előtt három macska ül. Hány macska van a szobában?', points: 5 }, // Négy (mindegyik macska látja a többit).
             { id: 36, type: 'text', content: 'Melyik állat ugrik magasabbra egy háznál?', points: 6 } // Mindegyik mert a ház nem ugrik
+        ]
+    },
+    {
+        title: "Földrajz",
+        questions: [
+            { id: 37, type: 'text', content: 'Mi a neve a világ legkisebb kontinensének?', points: 1 }, // Ausztrália
+            { id: 38, type: 'text', content: 'Melyik város a világ legnagyobb lakosságú fővárosa?', points: 2 }, // Tokió
+            { id: 39, type: 'text', content: 'Melyik az az ország, amely egyszerre tartozik Ázsiához és Európához is?', points: 3 }, // Törökország
+            { id: 40, type: 'text', content: 'Melyik ország területén található Machu Picchu?', points: 4 }, // Peru
+            { id: 41, type: 'text', content: 'Melyik ország fővárosa Kuala Lumpur?', points: 5 }, // Malajzia
+            { id: 42, type: 'image', content: 'media/images/Flag_of_Syria.svg.png', points: 6 } // Szíria
         ]
     }
 ];
