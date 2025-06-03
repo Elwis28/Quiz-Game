@@ -57,21 +57,6 @@ body {
   margin: 0 auto; /* Center the grid horizontally */
 }
 
-/* Container for the quiz boxes */
-.questions-row {
-  display: flex;
-  flex-wrap: wrap; /* Enables wrapping when boxes don't fit */
-  gap: 15px; /* Space between the boxes */
-  justify-content: space-evenly; /* Ensures spacing is even */
-}
-
-/* Container for the quiz boxes */
-.questions-row {
-  display: flex;
-  flex-wrap: wrap; /* Enables wrapping when boxes don't fit */
-  gap: 15px; /* Space between the boxes */
-  justify-content: space-evenly; /* Ensures spacing is even */
-}
 
 .quiz-box {
   background-color: #4caf50; /* Green box background */
