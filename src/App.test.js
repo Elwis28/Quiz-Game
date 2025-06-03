@@ -1,8 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import axios from 'axios';
 
-test('renders learn react link', () => {
+jest.mock('axios', () => ({
+  get: jest.fn(),
+  post: jest.fn(),
+}));
+
+test('shows initial loading indicator', async () => {
+  axios.get.mockResolvedValue({ data: { isGameStarted: false, teams: [], loggedInTeams: [] } });
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
 });
