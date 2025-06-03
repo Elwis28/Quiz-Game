@@ -48,7 +48,7 @@ const quizData = [
         questions: [
             { id: 25, type: 'text', content: 'Ki az end boss az eredeti Super Marioban?', points: 1 }, // Bowser
             { id: 26, type: 'text', content: 'Melyik híres anime főszereplője Monkey D. Luffy?', points: 2 }, // One Piece
-            { id: 27, type: 'text', content: 'Mi a neve az hajónak az eredeti Mass Effect játékokban?', points: 3 }, // Normandy
+            { id: 27, type: 'text', content: 'Mi a neve annak a hajónak az eredeti Mass Effect játékokban?', points: 3 }, // Normandy
             { id: 28, type: 'text', content: 'Mi a neve a varázslatnak amivel reptetni lehet a tárgyakat a Harry Potter világában?', points: 4 }, // Wingardium Leviosa
             { id: 29, type: 'text', content: 'Mi a neve a Fallout videojátékok posztapokaliptikus menedékeinek?', points: 5 }, // Vault
             { id: 30, type: 'text', content: 'Mi a neve a világ első e-sport eseményén, 1972-ben játszott játéknak?', points: 6 } // Spacewar!
